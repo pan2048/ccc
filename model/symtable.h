@@ -24,7 +24,7 @@ struct symtable
 // value that represents the level of indirection,
 // e.g. 0= no pointer, 1= pointer, 2= pointer pointer etc.
 enum {
-  P_NONE, P_VOID = 16, P_CHAR = 32, P_INT = 48, P_LONG = 64,
+  P_NONE_TYPE, P_VOID = 16, P_CHAR = 32, P_INT = 48, P_LONG = 64,
   P_STRUCT=80, P_UNION=96
 };
 

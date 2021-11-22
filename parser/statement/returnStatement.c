@@ -5,7 +5,7 @@
 // return_statement: 'return' '(' expression ')'  ;
 //
 // Parse a return statement and return its AST
-struct ASTnode *returnStatement(void) {
+struct ASTnode *returnStatement() {
   struct ASTnode *tree= NULL;
 
   // Ensure we have 'return'
@@ -33,7 +33,7 @@ struct ASTnode *returnStatement(void) {
   }
 
   // Add on the A_RETURN node
-  tree = astMakeUnary(A_RETURN, P_NONE, NULL, tree, NULL, 0);
+  tree = astMakeUnary(A_RETURN, P_NONE_TYPE, NULL, tree, NULL, 0);
 
   // Get the ';'
   semi();

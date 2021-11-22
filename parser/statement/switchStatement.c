@@ -1,5 +1,3 @@
-#include "../../lib/lib.h"
-#include "../../lexer/lexer.h"
 #include "../parser.h"
 
 // Parse a switch statement and return its AST
@@ -26,7 +24,7 @@ struct ASTnode *switchStatement()
 
     // Build an A_SWITCH subtree with the expression as
     // the child
-    n = astMakeUnary(A_SWITCH, P_NONE, NULL, left, NULL, 0);
+    n = astMakeUnary(A_SWITCH, P_NONE_TYPE, NULL, left, NULL, 0);
 
     // Now parse the cases
     Switchlevel++;
@@ -86,13 +84,11 @@ struct ASTnode *switchStatement()
             // and link it in to the growing A_CASE tree
             if (casetree == NULL)
             {
-                casetree = casetail =
-                    astMakeUnary(ASTop, P_NONE, NULL, body, NULL, casevalue);
+                casetree = casetail = astMakeUnary(ASTop, P_NONE_TYPE, NULL, body, NULL, casevalue);
             }
             else
             {
-                casetail->right =
-                    astMakeUnary(ASTop, P_NONE, NULL, body, NULL, casevalue);
+                casetail->right = astMakeUnary(ASTop, P_NONE_TYPE, NULL, body, NULL, casevalue);
                 casetail = casetail->right;
             }
             break;

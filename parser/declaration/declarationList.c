@@ -38,7 +38,7 @@ int declarationList(struct symtable **ctype, int class, int et1, int et2,
             *gluetree = tree;
         else
             *gluetree =
-                astMakeNode(A_GLUE, P_NONE, NULL, *gluetree, NULL, tree, NULL, 0);
+                astMakeNode(A_GLUE, P_NONE_TYPE, NULL, *gluetree, NULL, tree, NULL, 0);
 
         // We are at the end of the list, leave
         if (Token.token == et1 || Token.token == et2)

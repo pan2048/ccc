@@ -1,0 +1,121 @@
+#include "../parser.h"
+
+// prefix_expression: postfix_expression
+//     | '*'  prefix_expression
+//     | '&'  prefix_expression
+//     | '-'  prefix_expression
+//     | '++' prefix_expression
+//     | '--' prefix_expression
+//     ;
+
+// Parse a prefix expression and return
+// a sub-tree representing it.
+struct ASTnode *prefix(int ptp)
+{
+  struct ASTnode *tree;
+  switch (Token.token)
+  {
+  case T_AMPER:
+    // Get the next token and parse it
+    // recursively as a prefix expression
+    scan(&Token);
+    tree = prefix(ptp);
+
+    // Ensure that it's an identifier
+    if (tree->op != A_IDENT)
+      fatal("& operator must be followed by an identifier");
+
+    // Prevent '&' being performed on an array
+    if (tree->sym->stype == S_ARRAY)
+      fatal("& operator cannot be performed on an array");
+
+    // Now change the operator to A_ADDR and the type to
+    // a pointer to the original type
+    tree->op = A_ADDR;
+    tree->type = pointer_to(tree->type);
+    break;
+  case T_STAR:
+    // Get the next token and parse it
+    // recursively as a prefix expression.
+    // Make it an rvalue
+    scan(&Token);
+    tree = prefix(ptp);
+    tree->rvalue = 1;
+
+    // Ensure the tree's type is a pointer
+    if (!typeIsPointer(tree->type))
+      fatal("* operator must be followed by an expression of pointer type");
+
+    // Prepend an A_DEREF operation to the tree
+    tree =
+        astMakeUnary(A_DEREF, value_at(tree->type), tree->ctype, tree, NULL, 0);
+    break;
+  case T_MINUS:
+    // Get the next token and parse it
+    // recursively as a prefix expression
+    scan(&Token);
+    tree = prefix(ptp);
+
+    // Prepend a A_NEGATE operation to the tree and
+    // make the child an rvalue. Because chars are unsigned,
+    // also widen this if needed to int so that it's signed
+    tree->rvalue = 1;
+    if (tree->type == P_CHAR)
+      tree->type = P_INT;
+    tree = astMakeUnary(A_NEGATE, tree->type, tree->ctype, tree, NULL, 0);
+    break;
+  case T_INVERT:
+    // Get the next token and parse it
+    // recursively as a prefix expression
+    scan(&Token);
+    tree = prefix(ptp);
+
+    // Prepend a A_INVERT operation to the tree and
+    // make the child an rvalue.
+    tree->rvalue = 1;
+    tree = astMakeUnary(A_INVERT, tree->type, tree->ctype, tree, NULL, 0);
+    break;
+  case T_LOGNOT:
+    // Get the next token and parse it
+    // recursively as a prefix expression
+    scan(&Token);
+    tree = prefix(ptp);
+
+    // Prepend a A_LOGNOT operation to the tree and
+    // make the child an rvalue.
+    tree->rvalue = 1;
+    tree = astMakeUnary(A_LOGNOT, tree->type, tree->ctype, tree, NULL, 0);
+    break;
+  case T_INC:
+    // Get the next token and parse it
+    // recursively as a prefix expression
+    scan(&Token);
+    tree = prefix(ptp);
+
+    // For now, ensure it's an identifier
+    if (tree->op != A_IDENT)
+      fatal("++ operator must be followed by an identifier");
+
+    // Prepend an A_PREINC operation to the tree
+    tree = astMakeUnary(A_PREINC, tree->type, tree->ctype, tree, NULL, 0);
+    break;
+  case T_DEC:
+    // Get the next token and parse it
+    // recursively as a prefix expression
+    scan(&Token);
+    tree = prefix(ptp);
+
+    // For now, ensure it's an identifier
+    if (tree->op != A_IDENT)
+      fatal("-- operator must be followed by an identifier");
+
+    // Prepend an A_PREDEC operation to the tree
+    tree = astMakeUnary(A_PREDEC, tree->type, tree->ctype, tree, NULL, 0);
+    break;
+  default:
+    tree = postfix(ptp);
+  }
+  return (tree);
+}
+
+

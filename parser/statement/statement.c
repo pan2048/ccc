@@ -1,5 +1,3 @@
-#include "../../lib/lib.h"
-#include "../../lexer/lexer.h"
 #include "../parser.h"
 
 // Parse a single statement and return its AST.

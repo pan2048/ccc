@@ -1,5 +1,3 @@
-#include "../../lib/lib.h"
-#include "../../lexer/lexer.h"
 #include "../parser.h"
 
 // while_statement: 'while' '(' true_false_expression ')' statement  ;
@@ -29,5 +27,5 @@ struct ASTnode *whileStatement()
     Looplevel--;
 
     // Build and return the AST for this statement
-    return (astMakeNode(A_WHILE, P_NONE, NULL, condAST, NULL, bodyAST, NULL, 0));
+    return (astMakeNode(A_WHILE, P_NONE_TYPE, NULL, condAST, NULL, bodyAST, NULL, 0));
 }
