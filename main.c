@@ -46,7 +46,7 @@ char *doCompile(char *filename)
   scan(&Token);              // Get the first token from the input
   Peektoken.token = 0;       // and set there is no lookahead token
   genPreamble(filename);     // Output the preamble
-  parseGlobalDeclarations(); // Parse the global declarations
+  globalDeclarations(); // Parse the global declarations
   genPostamble();            // Output the postamble
   fclose(Outfile);           // Close the output file
 
