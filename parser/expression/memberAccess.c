@@ -6,11 +6,11 @@
 struct ASTnode *member_access(struct ASTnode *left, int withpointer)
 {
   struct ASTnode *right;
-  struct symtable *typeptr;
-  struct symtable *m;
+  struct symTable *typeptr;
+  struct symTable *m;
 
   // Check that the left AST tree is a pointer to struct or union
-  if (withpointer && left->type != pointer_to(P_STRUCT) && left->type != pointer_to(P_UNION))
+  if (withpointer && left->type != pointerTo(P_STRUCT) && left->type != pointerTo(P_UNION))
     fatal("Expression is not a pointer to a struct/union");
 
   // Or, check that the left AST tree is a struct or union.
@@ -47,7 +47,7 @@ struct ASTnode *member_access(struct ASTnode *left, int withpointer)
 
   // Add the member's offset to the base of the struct/union
   // and dereference it. Still an lvalue at this point
-  left = astMakeNode(A_ADD, pointer_to(m->type), m->ctype, left, NULL, right, NULL, 0);
+  left = astMakeNode(A_ADD, pointerTo(m->type), m->ctype, left, NULL, right, NULL, 0);
   left = astMakeUnary(A_DEREF, m->type, m->ctype, left, NULL, 0);
   return (left);
 }

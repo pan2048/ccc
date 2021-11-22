@@ -32,7 +32,7 @@ struct ASTnode *prefix(int ptp)
     // Now change the operator to A_ADDR and the type to
     // a pointer to the original type
     tree->op = A_ADDR;
-    tree->type = pointer_to(tree->type);
+    tree->type = pointerTo(tree->type);
     break;
   case T_STAR:
     // Get the next token and parse it
@@ -48,7 +48,7 @@ struct ASTnode *prefix(int ptp)
 
     // Prepend an A_DEREF operation to the tree
     tree =
-        astMakeUnary(A_DEREF, value_at(tree->type), tree->ctype, tree, NULL, 0);
+        astMakeUnary(A_DEREF, valueAt(tree->type), tree->ctype, tree, NULL, 0);
     break;
   case T_MINUS:
     // Get the next token and parse it

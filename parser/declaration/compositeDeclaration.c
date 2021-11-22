@@ -4,10 +4,10 @@
 // Parse composite type declarations: structs or unions.
 // Either find an existing struct/union declaration, or build
 // a struct/union symbol table entry and return its pointer.
-struct symtable *composite_declaration(int type)
+struct symTable *compositeDeclaration(int type)
 {
-  struct symtable *ctype = NULL;
-  struct symtable *m;
+  struct symTable *ctype = NULL;
+  struct symTable *m;
   struct ASTnode *unused;
   int offset;
   int t;
@@ -20,9 +20,9 @@ struct symtable *composite_declaration(int type)
   {
     // Find any matching composite type
     if (type == P_STRUCT)
-      ctype = findstruct(Text);
+      ctype = findStruct(Text);
     else
-      ctype = findunion(Text);
+      ctype = findUnion(Text);
     scan(&Token);
   }
 
@@ -43,9 +43,9 @@ struct symtable *composite_declaration(int type)
 
   // Build the composite type and skip the left brace
   if (type == P_STRUCT)
-    ctype = addstruct(Text);
+    ctype = addStruct(Text);
   else
-    ctype = addunion(Text);
+    ctype = addUnion(Text);
   scan(&Token);
 
   // Scan in the list of members
@@ -72,7 +72,7 @@ struct symtable *composite_declaration(int type)
   // and find the first free byte after it
   m = ctype->member;
   m->st_posn = 0;
-  offset = typesize(m->type, m->ctype);
+  offset = typeSize(m->type, m->ctype);
 
   // Set the position of each successive member in the composite type
   // Unions are easy. For structs, align the member and find the next free byte
@@ -85,7 +85,7 @@ struct symtable *composite_declaration(int type)
       m->st_posn = 0;
 
     // Get the offset of the next free byte after this member
-    offset += typesize(m->type, m->ctype);
+    offset += typeSize(m->type, m->ctype);
   }
 
   // Set the overall size of the composite type

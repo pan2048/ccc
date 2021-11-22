@@ -19,18 +19,18 @@ struct ASTnode *array_access(struct ASTnode *left)
   match(T_RBRACKET, "]");
 
   // Ensure that this is of int type
-  if (!inttype(right->type))
+  if (!intType(right->type))
     fatal("Array index is not of integer type");
 
   // Make the left tree an rvalue
   left->rvalue = 1;
 
   // Scale the index by the size of the element's type
-  right = modify_type(right, left->type, left->ctype, A_ADD);
+  right = modifyType(right, left->type, left->ctype, A_ADD);
 
   // Return an AST tree where the array's base has the offset added to it,
   // and dereference the element. Still an lvalue at this point.
   left = astMakeNode(A_ADD, left->type, left->ctype, left, NULL, right, NULL, 0);
-  left = astMakeUnary(A_DEREF, value_at(left->type), left->ctype, left, NULL, 0);
+  left = astMakeUnary(A_DEREF, valueAt(left->type), left->ctype, left, NULL, 0);
   return (left);
 }

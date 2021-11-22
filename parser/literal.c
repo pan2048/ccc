@@ -25,7 +25,7 @@ int literal(int type)
     fatal("Cannot initialise globals with a general expression");
 
   // If the type is char * and
-  if (type == pointer_to(P_CHAR))
+  if (type == pointerTo(P_CHAR))
   {
     // We have a string literal, return the label number
     if (tree->op == A_STRLIT)
@@ -37,7 +37,7 @@ int literal(int type)
 
   // We only get here with an integer literal. The input type
   // is an integer type and is wide enough to hold the literal value
-  if (inttype(type) && typesize(type, NULL) >= typesize(tree->type, NULL))
+  if (intType(type) && typeSize(type, NULL) >= typeSize(tree->type, NULL))
     return (tree->a_intvalue);
 
   fatal("Type mismatch: literal vs. variable");

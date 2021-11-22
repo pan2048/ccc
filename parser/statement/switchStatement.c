@@ -19,7 +19,7 @@ struct ASTnode *switchStatement()
     lbrace();
 
     // Ensure that this is of int type
-    if (!inttype(left->type))
+    if (!intType(left->type))
         fatal("Switch expression is not of integer type");
 
     // Build an A_SWITCH subtree with the expression as

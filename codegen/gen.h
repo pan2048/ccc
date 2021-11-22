@@ -7,7 +7,7 @@ int getLabel(void);
 
 void genPreamble(char *filename);
 void genPostamble();
-void genGlobSym(struct symtable *node);
+void genGlobSym(struct symTable *node);
 int genGlobStr(char *strvalue, int append);
 void genGlobStrEnd();
 int genPrimSize(int type);

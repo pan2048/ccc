@@ -3,10 +3,10 @@ struct foo { int x; char y; long z; };
 typedef struct foo blah;
 
 // Symbol table structure
-struct symtable {
+struct symTable {
   char *name;                   // Name of a symbol
   int type;                     // Primitive type for the symbol
-  struct symtable *ctype;       // If struct/union, ptr to that type
+  struct symTable *ctype;       // If struct/union, ptr to that type
   int stype;                    // Structural type for the symbol
   int class;                    // Storage class for the symbol
   int size;                     // Total size in bytes of this symbol
@@ -15,8 +15,8 @@ struct symtable {
   int st_posn;                  // For locals, the negative offset
                                 // from the stack base pointer
   int *initlist;                // List of initial values
-  struct symtable *next;        // Next symbol in one list
-  struct symtable *member;      // First member of a function, struct,
+  struct symTable *next;        // Next symbol in one list
+  struct symTable *member;      // First member of a function, struct,
 };                              // union or enum
 
 // Abstract Syntax Tree structure
@@ -27,7 +27,7 @@ struct ASTnode {
   struct ASTnode *left;         // Left, middle and right child trees
   struct ASTnode *mid;
   struct ASTnode *right;
-  struct symtable *sym;         // For many AST nodes, the pointer to
+  struct symTable *sym;         // For many AST nodes, the pointer to
                                 // the symbol in the symbol table
 #define a_intvalue a_size       // For A_INTLIT, the integer value
   int a_size;                   // For A_SCALE, the size to scale by
@@ -39,7 +39,7 @@ int main() {
   printf("%ld\n", sizeof(long));
   printf("%ld\n", sizeof(char *));
   printf("%ld\n", sizeof(blah));
-  printf("%ld\n", sizeof(struct symtable));
+  printf("%ld\n", sizeof(struct symTable));
   printf("%ld\n", sizeof(struct ASTnode));
   return(0);
 }

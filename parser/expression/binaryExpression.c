@@ -58,7 +58,7 @@ struct ASTnode *binexpr(int ptp)
       right->rvalue = 1;
 
       // Ensure the right's type matches the left
-      right = modify_type(right, left->type, left->ctype, 0);
+      right = modifyType(right, left->type, left->ctype, 0);
       if (right == NULL)
         fatal("Incompatible expression in assignment");
 
@@ -78,8 +78,8 @@ struct ASTnode *binexpr(int ptp)
 
       // Ensure the two types are compatible by trying
       // to modify each tree to match the other's type.
-      ltemp = modify_type(left, right->type, right->ctype, ASTop);
-      rtemp = modify_type(right, left->type, left->ctype, ASTop);
+      ltemp = modifyType(left, right->type, right->ctype, ASTop);
+      rtemp = modifyType(right, left->type, left->ctype, ASTop);
       if (ltemp == NULL && rtemp == NULL)
       {
         fatal("Incompatible types in binary expression");

@@ -16,7 +16,7 @@ int cgLoadLiteralInt(int value, int type)
 // Return the number of the register. If the
 // operation is pre- or post-increment/decrement,
 // also perform this action.
-int cgLoadVariable(struct symtable *sym, int op)
+int cgLoadVariable(struct symTable *sym, int op)
 {
   int r, postreg, offset = 1;
 
@@ -27,7 +27,7 @@ int cgLoadVariable(struct symtable *sym, int op)
   // of the type that it points to as any
   // increment or decrement. If not, it's one.
   if (typeIsPointer(sym->type))
-    offset = typesize(value_at(sym->type), sym->ctype);
+    offset = typeSize(valueAt(sym->type), sym->ctype);
 
   // Negate the offset for decrements
   if (op == A_PREDEC || op == A_POSTDEC)
@@ -141,7 +141,7 @@ void cgLoadBoolean(int r, int val)
 
 // Generate code to load the address of an
 // identifier into a variable. Return a new register
-int cgLoadAddress(struct symtable *sym)
+int cgLoadAddress(struct symTable *sym)
 {
   int r = cgRegisterAlloc();
 

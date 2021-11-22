@@ -2,13 +2,13 @@
 #define _TYPE_H_
 
 // types.c
-int inttype(int type);
+int intType(int type);
 int typeIsPointer(int type);
-int pointer_to(int type);
-int value_at(int type);
-int typesize(int type, struct symtable *ctype);
-struct ASTnode *modify_type(struct ASTnode *tree, int rtype,
-			    struct symtable *rctype, int op);
-int value_at(int type); 
+int pointerTo(int type);
+int valueAt(int type);
+int typeSize(int type, struct symTable *ctype);
+struct ASTnode *modifyType(struct ASTnode *tree, int rtype,
+			    struct symTable *rctype, int op);
+int valueAt(int type); 
 
 #endif

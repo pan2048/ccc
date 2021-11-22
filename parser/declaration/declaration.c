@@ -1,17 +1,17 @@
 #include "../parser.h"
 
-struct symtable *Functionid; // Symbol ptr of the current function
+struct symTable *Functionid; // Symbol ptr of the current function
 
 int Looplevel;   // Depth of nested loops
 int Switchlevel; // Depth of nested switches
 
 //struct symtable *composite_declaration(int type);
-int typedef_declaration(struct symtable **ctype);
+int typedef_declaration(struct symTable **ctype);
 
 // Given a typedef name, return the type it represents
-int type_of_typedef(char *name, struct symtable **ctype)
+int type_of_typedef(char *name, struct symTable **ctype)
 {
-  struct symtable *t;
+  struct symTable *t;
 
   // Look up the typedef in the list
   t = findtypedef(name);
@@ -25,12 +25,12 @@ int type_of_typedef(char *name, struct symtable **ctype)
 // Parse the current token and return a primitive type enum value,
 // a pointer to any composite type and possibly modify
 // the class of the type.
-int parse_type(struct symtable **ctype, int *class)
+int parseType(struct symTable **ctype, int *class)
 {
-  int type, exstatic = 1;
+  int type, externStatic = 1;
 
   // See if the class has been changed to extern or static
-  while (exstatic)
+  while (externStatic)
   {
     switch (Token.token)
     {
@@ -49,7 +49,7 @@ int parse_type(struct symtable **ctype, int *class)
       scan(&Token);
       break;
     default:
-      exstatic = 0;
+      externStatic = 0;
     }
   }
 
@@ -78,19 +78,19 @@ int parse_type(struct symtable **ctype, int *class)
     // Example: struct x {int y; int z};
   case T_STRUCT:
     type = P_STRUCT;
-    *ctype = composite_declaration(P_STRUCT);
+    *ctype = compositeDeclaration(P_STRUCT);
     if (Token.token == T_SEMI)
       type = -1;
     break;
   case T_UNION:
     type = P_UNION;
-    *ctype = composite_declaration(P_UNION);
+    *ctype = compositeDeclaration(P_UNION);
     if (Token.token == T_SEMI)
       type = -1;
     break;
   case T_ENUM:
     type = P_INT; // Enums are really ints
-    enum_declaration();
+    enumDeclaration();
     if (Token.token == T_SEMI)
       type = -1;
     break;
@@ -110,25 +110,25 @@ int parse_type(struct symtable **ctype, int *class)
 
 // Given a type parsed by parse_type(), scan in any following
 // '*' tokens and return the new type
-int parse_stars(int type)
+int parseStars(int type)
 {
   while (1)
   {
     if (Token.token != T_STAR)
       break;
-    type = pointer_to(type);
+    type = pointerTo(type);
     scan(&Token);
   }
   return (type);
 }
 
 // Parse a type which appears inside a cast
-int parse_cast(struct symtable **ctype)
+int parseCast(struct symTable **ctype)
 {
   int type, class = 0;
 
   // Get the type inside the parentheses
-  type = parse_stars(parse_type(ctype, &class));
+  type = parseStars(parseType(ctype, &class));
 
   // Do some error checking. I'm sure more can be done
   if (type == P_STRUCT || type == P_UNION || type == P_VOID)
@@ -136,45 +136,10 @@ int parse_cast(struct symtable **ctype)
   return (type);
 }
 
-// Given a pointer to a symbol that may already exist
-// return true if this symbol doesn't exist. We use
-// this function to convert externs into globals
-int is_new_symbol(struct symtable *sym, int class,
-                  int type, struct symtable *ctype)
-{
-
-  // There is no existing symbol, thus is new
-  if (sym == NULL)
-    return (1);
-
-  // global versus extern: if they match that it's not new
-  // and we can convert the class to global
-  if ((sym->class == C_GLOBAL && class == C_EXTERN) || (sym->class == C_EXTERN && class == C_GLOBAL))
-  {
-
-    // If the types don't match, there's a problem
-    if (type != sym->type)
-      fatals("Type mismatch between global/extern", sym->name);
-
-    // Struct/unions, also compare the ctype
-    if (type >= P_STRUCT && ctype != sym->ctype)
-      fatals("Type mismatch between global/extern", sym->name);
-
-    // If we get to here, the types match, so mark the symbol
-    // as global
-    sym->class = C_GLOBAL;
-    // Return that symbol is not new
-    return (0);
-  }
-
-  // It must be a duplicate symbol if we get here
-  fatals("Duplicate global variable declaration", sym->name);
-  return (-1); // Keep -Wall happy
-}
 
 // Parse a typedef declaration and return the type
 // and ctype that it represents
-int typedef_declaration(struct symtable **ctype)
+int typedef_declaration(struct symTable **ctype)
 {
   int type, class = 0;
 
@@ -182,7 +147,7 @@ int typedef_declaration(struct symtable **ctype)
   scan(&Token);
 
   // Get the actual type following the keyword
-  type = parse_type(ctype, &class);
+  type = parseType(ctype, &class);
   if (class != 0)
     fatal("Can't have static/extern in a typedef declaration");
 
@@ -191,7 +156,7 @@ int typedef_declaration(struct symtable **ctype)
     fatals("redefinition of typedef", Text);
 
   // Get any following '*' tokens
-  type = parse_stars(type);
+  type = parseStars(type);
 
   // It doesn't exist so add it to the typedef list
   addtypedef(Text, type, *ctype);

@@ -2,27 +2,26 @@
 
 // Parse a list of symbols where there is an initial type.
 // Return the type of the symbols. et1 and et2 are end tokens.
-int declarationList(struct symtable **ctype, int class, int et1, int et2,
-                     struct ASTnode **gluetree)
+int declarationList(struct symTable **ctype, int class, int et1, int et2, struct ASTnode **gluetree)
 {
     int inittype, type;
-    struct symtable *sym;
+    struct symTable *sym;
     struct ASTnode *tree;
     *gluetree = NULL;
 
     // Get the initial type. If -1, it was
     // a composite type definition, return this
-    if ((inittype = parse_type(ctype, &class)) == -1)
+    if ((inittype = parseType(ctype, &class)) == -1)
         return (inittype);
 
     // Now parse the list of symbols
     while (1)
     {
         // See if this symbol is a pointer
-        type = parse_stars(inittype);
+        type = parseStars(inittype);
 
         // Parse this symbol
-        sym = symbol_declaration(type, *ctype, class, &tree);
+        sym = symbolDeclaration(type, *ctype, class, &tree);
 
         // We parsed a function, there is no list so leave
         if (sym->stype == S_FUNCTION)
@@ -37,8 +36,7 @@ int declarationList(struct symtable **ctype, int class, int et1, int et2,
         if (*gluetree == NULL)
             *gluetree = tree;
         else
-            *gluetree =
-                astMakeNode(A_GLUE, P_NONE_TYPE, NULL, *gluetree, NULL, tree, NULL, 0);
+            *gluetree = astMakeNode(A_GLUE, P_NONE_TYPE, NULL, *gluetree, NULL, tree, NULL, 0);
 
         // We are at the end of the list, leave
         if (Token.token == et1 || Token.token == et2)

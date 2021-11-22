@@ -1,20 +1,17 @@
 #include "../../main.h"
-#include "../../lib/lib.h"
-#include "../../codegen/gen.h"
-#include "../../lexer/lexer.h"
 #include "../parser.h"
 
 
 // Given a possibly NULL pointer to the function's previous declaration,
 // parse a list of parameters and cross-check them against the
 // previous declaration. Return the count of parameters
-static int functionParamDeclarationList(struct symtable *oldfuncsym)
+static int functionParamDeclarationList(struct symTable *oldfuncsym)
 {
-    struct symtable *protoptr = NULL;
+    struct symTable *protoptr = NULL;
 
     int paramcnt = 0;
     int type;
-    struct symtable *ctype;
+    struct symTable *ctype;
     struct ASTnode *unused;
 
     // Get the pointer to the first prototype parameter
@@ -72,12 +69,12 @@ static int functionParamDeclarationList(struct symtable *oldfuncsym)
 //      | type identifier '(' parameter_list ')' compound_statement   ;
 //
 // Parse the declaration of function.
-struct symtable *functionDeclaration(char *funcname, int type,
-                                      struct symtable *ctype,
+struct symTable *functionDeclaration(char *funcname, int type,
+                                      struct symTable *ctype,
                                       int class)
 {
     struct ASTnode *tree, *finalstmt;
-    struct symtable *oldfuncsym, *newfuncsym = NULL;
+    struct symTable *oldfuncsym, *newfuncsym = NULL;
     int endlabel, paramcnt;
     int linenum = LineNumber;
 
@@ -97,7 +94,7 @@ struct symtable *functionDeclaration(char *funcname, int type,
     {
         endlabel = getLabel();
         // Assumption: functions only return scalar types, so NULL below
-        newfuncsym = addglob(funcname, type, NULL, S_FUNCTION, class, 0, endlabel);
+        newfuncsym = addGlobal(funcname, type, NULL, S_FUNCTION, class, 0, endlabel);
     }
 
     // Scan in the '(', any parameters and the ')'.

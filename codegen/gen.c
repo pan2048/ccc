@@ -12,7 +12,7 @@ void genPostamble() {
   cgFilePostamble();
 }
 
-void genGlobSym(struct symtable *node) {
+void genGlobSym(struct symTable *node) {
   cgGlobalSym(node);
 }
 

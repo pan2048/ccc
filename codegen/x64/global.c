@@ -1,7 +1,7 @@
 #include "x64.h"
 
 // Generate a global symbol but not functions
-void cgGlobalSym(struct symtable *node)
+void cgGlobalSym(struct symTable *node)
 {
   int size, type;
   int initvalue;
@@ -16,8 +16,8 @@ void cgGlobalSym(struct symtable *node)
   // and the type of the variable
   if (node->stype == S_ARRAY)
   {
-    size = typesize(value_at(node->type), node->ctype);
-    type = value_at(node->type);
+    size = typeSize(valueAt(node->type), node->ctype);
+    type = valueAt(node->type);
   }
   else
   {
@@ -52,7 +52,7 @@ void cgGlobalSym(struct symtable *node)
     case 8:
       // Generate the pointer to a string literal. Treat a zero value
       // as actually zero, not the label L0
-      if (node->initlist != NULL && type == pointer_to(P_CHAR) && initvalue != 0)
+      if (node->initlist != NULL && type == pointerTo(P_CHAR) && initvalue != 0)
         fprintf(Outfile, "\t.quad\tL%d\n", initvalue);
       else
         fprintf(Outfile, "\t.quad\t%d\n", initvalue);

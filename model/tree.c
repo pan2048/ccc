@@ -4,11 +4,11 @@
 // Build and return a generic AST node
 struct ASTnode *astMakeNode(int op,
                             int type,
-                            struct symtable *ctype,
+                            struct symTable *ctype,
                             struct ASTnode *left,
                             struct ASTnode *mid,
                             struct ASTnode *right,
-                            struct symtable *sym,
+                            struct symTable *sym,
                             int intvalue)
 {
   struct ASTnode *n;
@@ -33,17 +33,17 @@ struct ASTnode *astMakeNode(int op,
 
 // Make an AST leaf node
 struct ASTnode *astMakeLeaf(int op, int type,
-                            struct symtable *ctype,
-                            struct symtable *sym, int intvalue)
+                            struct symTable *ctype,
+                            struct symTable *sym, int intvalue)
 {
   return (astMakeNode(op, type, ctype, NULL, NULL, NULL, sym, intvalue));
 }
 
 // Make a unary AST node: only one child
 struct ASTnode *astMakeUnary(int op, int type,
-                             struct symtable *ctype,
+                             struct symTable *ctype,
                              struct ASTnode *left,
-                             struct symtable *sym, int intvalue)
+                             struct symTable *sym, int intvalue)
 {
   return (astMakeNode(op, type, ctype, left, NULL, NULL, sym, intvalue));
 }

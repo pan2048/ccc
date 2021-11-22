@@ -98,7 +98,7 @@ int cgCompareAndJumpTo(int ASToperation, int r1, int r2, int label, int type)
 }
 
 // Generate code to return a value from a function
-void cgReturn(int reg, struct symtable *sym)
+void cgReturn(int reg, struct symTable *sym)
 {
 
   // Only return a value if we have a value to return

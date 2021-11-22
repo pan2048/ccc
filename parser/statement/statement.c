@@ -4,7 +4,7 @@
 struct ASTnode *singleStatement()
 {
   struct ASTnode *stmt;
-  struct symtable *ctype;
+  struct symTable *ctype;
   int linenum = LineNumber;
 
   switch (Token.token)

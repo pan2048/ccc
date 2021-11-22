@@ -4,7 +4,7 @@
 struct ASTnode *funccall()
 {
   struct ASTnode *tree;
-  struct symtable *funcptr;
+  struct symTable *funcptr;
 
   // Check that the identifier has been defined as a function,
   // then make a leaf node for it.

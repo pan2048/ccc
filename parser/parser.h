@@ -21,27 +21,26 @@ int rightassoc(int tokentype);
 int binastop(int tokentype);
 struct ASTnode *postfix(int ptp);
 
-int is_new_symbol(struct symtable *sym, int class, 
-		  int type, struct symtable *ctype) ;
-int parse_type(struct symtable **ctype, int *class);
-int parse_stars(int type);
-int parse_cast(struct symtable **ctype);
-int declarationList(struct symtable **ctype, int class, int et1, int et2,
+
+int parseType(struct symTable **ctype, int *class);
+int parseStars(int type);
+int parseCast(struct symTable **ctype);
+int declarationList(struct symTable **ctype, int class, int et1, int et2,
 		     struct ASTnode **gluetree);
 
 
-struct symtable *array_declaration(char *varname, int type,
-					  struct symtable *ctype, int class); 
-void enum_declaration();
-struct symtable *composite_declaration(int type); 
-struct symtable *symbol_declaration(int type, struct symtable *ctype,
+struct symTable *arrayDeclaration(char *varname, int type,
+					  struct symTable *ctype, int class); 
+void enumDeclaration();
+struct symTable *compositeDeclaration(int type); 
+struct symTable *symbolDeclaration(int type, struct symTable *ctype,
                                     int class, struct ASTnode **tree);
-struct symtable *functionDeclaration(char *funcname, int type,
-					     struct symtable *ctype,
+struct symTable *functionDeclaration(char *funcname, int type,
+					     struct symTable *ctype,
 					     int class);
 void globalDeclarations(void);
-struct symtable *scalarDeclaration(char *varname, int type,
-					   struct symtable *ctype,
+struct symTable *scalarDeclaration(char *varname, int type,
+					   struct symTable *ctype,
 					   int class, struct ASTnode **tree); 
 
 struct ASTnode *forStatement();

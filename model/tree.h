@@ -21,12 +21,12 @@ enum {
 struct ASTnode {
   int op;			// "Operation" to be performed on this tree
   int type;			// Type of any expression this tree generates
-  struct symtable *ctype;	// If struct/union, ptr to that type
+  struct symTable *ctype;	// If struct/union, ptr to that type
   int rvalue;			// True if the node is an rvalue
   struct ASTnode *left;		// Left, middle and right child trees
   struct ASTnode *mid;
   struct ASTnode *right;
-  struct symtable *sym;		// For many AST nodes, the pointer to
+  struct symTable *sym;		// For many AST nodes, the pointer to
   				// the symbol in the symbol table
 #define a_intvalue a_size	// For A_INTLIT, the integer value
   int a_size;			// For A_SCALE, the size to scale by
@@ -43,18 +43,18 @@ enum {
 
 // tree.c
 struct ASTnode *astMakeNode(int op, int type,
-			  struct symtable *ctype,
+			  struct symTable *ctype,
 			  struct ASTnode *left,
 			  struct ASTnode *mid,
 			  struct ASTnode *right,
-			  struct symtable *sym, int intvalue);
+			  struct symTable *sym, int intvalue);
 struct ASTnode *astMakeLeaf(int op, int type,
-			  struct symtable *ctype,
-			  struct symtable *sym, int intvalue);
+			  struct symTable *ctype,
+			  struct symTable *sym, int intvalue);
 struct ASTnode *astMakeUnary(int op, int type,
-			   struct symtable *ctype,
+			   struct symTable *ctype,
 			   struct ASTnode *left,
-			   struct symtable *sym, int intvalue);
+			   struct symTable *sym, int intvalue);
 void dumpAST(struct ASTnode *n, int label, int level);
 
 

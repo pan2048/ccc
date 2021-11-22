@@ -1,9 +1,9 @@
 #include "../parser.h"
 
 // Parse an enum declaration
-void enum_declaration()
+void enumDeclaration()
 {
-  struct symtable *etype = NULL;
+  struct symTable *etype = NULL;
   char *name = NULL;
   int intval = 0;
 

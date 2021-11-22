@@ -4,7 +4,7 @@
 // either variables, functions or structs
 void globalDeclarations()
 {
-    struct symtable *ctype = NULL;
+    struct symTable *ctype = NULL;
     struct ASTnode *unused;
 
     // Loop parsing one declaration list until the end of file
@@ -13,7 +13,7 @@ void globalDeclarations()
         declarationList(&ctype, C_GLOBAL, T_SEMI, T_EOF, &unused);
 
         // Skip any separating semicolons
-        if (Token.token == T_SEMI)
+        while (Token.token == T_SEMI)
             scan(&Token);
     }
 }

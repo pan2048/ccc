@@ -4,18 +4,18 @@
 #include "type.h"
 
 // Symbol table lists
- struct symtable *Globhead, *Globtail;	  // Global variables and functions
- struct symtable *Loclhead, *Locltail;	  // Local variables
- struct symtable *Parmhead, *Parmtail;	  // Local parameters
- struct symtable *Membhead, *Membtail;	  // Temp list of struct/union members
- struct symtable *Structhead, *Structtail; // List of struct types
- struct symtable *Unionhead, *Uniontail;   // List of union types
- struct symtable *Enumhead,  *Enumtail;    // List of enum types and values
- struct symtable *Typehead,  *Typetail;    // List of typedefs
+ struct symTable *Globhead, *Globtail;	  // Global variables and functions
+ struct symTable *Loclhead, *Locltail;	  // Local variables
+ struct symTable *Parmhead, *Parmtail;	  // Local parameters
+ struct symTable *Membhead, *Membtail;	  // Temp list of struct/union members
+ struct symTable *Structhead, *Structtail; // List of struct types
+ struct symTable *Unionhead, *Uniontail;   // List of union types
+ struct symTable *Enumhead,  *Enumtail;    // List of enum types and values
+ struct symTable *Typehead,  *Typetail;    // List of typedefs
 
 // Append a node to the singly-linked list pointed to by head or tail
-void appendsym(struct symtable **head, struct symtable **tail,
-               struct symtable *node)
+void appendsym(struct symTable **head, struct symTable **tail,
+               struct symTable *node)
 {
 
   // Check for valid pointers
@@ -41,12 +41,12 @@ void appendsym(struct symtable **head, struct symtable **tail,
 // + size: number of elements, or endlabel: end label for a function
 // + posn: Position information for local symbols
 // Return a pointer to the new node
-struct symtable *newsym(char *name, int type, struct symtable *ctype,
+struct symTable *newsym(char *name, int type, struct symTable *ctype,
                         int stype, int class, int nelems, int posn)
 {
 
   // Get a new node
-  struct symtable *node = (struct symtable *)memAlloc(sizeof(struct symtable));
+  struct symTable *node = (struct symTable *)memAlloc(sizeof(struct symTable));
   if (node == NULL)
     fatal("Unable to malloc a symbol table node in newsym");
 
@@ -64,8 +64,8 @@ struct symtable *newsym(char *name, int type, struct symtable *ctype,
   // For pointers and integer types, set the size
   // of the symbol. structs and union declarations
   // manually set this up themselves.
-  if (typeIsPointer(type) || inttype(type))
-    node->size = nelems * typesize(type, ctype);
+  if (typeIsPointer(type) || intType(type))
+    node->size = nelems * typeSize(type, ctype);
 
   node->st_posn = posn;
   node->next = NULL;
@@ -75,10 +75,10 @@ struct symtable *newsym(char *name, int type, struct symtable *ctype,
 }
 
 // Add a symbol to the global symbol list
-struct symtable *addglob(char *name, int type, struct symtable *ctype,
+struct symTable *addGlobal(char *name, int type, struct symTable *ctype,
                          int stype, int class, int nelems, int posn)
 {
-  struct symtable *sym =
+  struct symTable *sym =
       newsym(name, type, ctype, stype, class, nelems, posn);
   // For structs and unions, copy the size from the type node
   if (type == P_STRUCT || type == P_UNION)
@@ -88,10 +88,10 @@ struct symtable *addglob(char *name, int type, struct symtable *ctype,
 }
 
 // Add a symbol to the local symbol list
-struct symtable *addlocl(char *name, int type, struct symtable *ctype,
+struct symTable *addLocal(char *name, int type, struct symTable *ctype,
                          int stype, int nelems)
 {
-  struct symtable *sym = newsym(name, type, ctype, stype, C_LOCAL, nelems, 0);
+  struct symTable *sym = newsym(name, type, ctype, stype, C_LOCAL, nelems, 0);
 
   // For structs and unions, copy the size from the type node
   if (type == P_STRUCT || type == P_UNION)
@@ -101,19 +101,19 @@ struct symtable *addlocl(char *name, int type, struct symtable *ctype,
 }
 
 // Add a symbol to the parameter list
-struct symtable *addparm(char *name, int type, struct symtable *ctype,
+struct symTable *addparm(char *name, int type, struct symTable *ctype,
                          int stype)
 {
-  struct symtable *sym = newsym(name, type, ctype, stype, C_PARAM, 1, 0);
+  struct symTable *sym = newsym(name, type, ctype, stype, C_PARAM, 1, 0);
   appendsym(&Parmhead, &Parmtail, sym);
   return (sym);
 }
 
 // Add a symbol to the temporary member list
-struct symtable *addmemb(char *name, int type, struct symtable *ctype,
+struct symTable *addmemb(char *name, int type, struct symTable *ctype,
                          int stype, int nelems)
 {
-  struct symtable *sym =
+  struct symTable *sym =
       newsym(name, type, ctype, stype, C_MEMBER, nelems, 0);
 
   // For structs and unions, copy the size from the type node
@@ -124,17 +124,17 @@ struct symtable *addmemb(char *name, int type, struct symtable *ctype,
 }
 
 // Add a struct to the struct list
-struct symtable *addstruct(char *name)
+struct symTable *addStruct(char *name)
 {
-  struct symtable *sym = newsym(name, P_STRUCT, NULL, 0, C_STRUCT, 0, 0);
+  struct symTable *sym = newsym(name, P_STRUCT, NULL, 0, C_STRUCT, 0, 0);
   appendsym(&Structhead, &Structtail, sym);
   return (sym);
 }
 
 // Add a struct to the union list
-struct symtable *addunion(char *name)
+struct symTable *addUnion(char *name)
 {
-  struct symtable *sym = newsym(name, P_UNION, NULL, 0, C_UNION, 0, 0);
+  struct symTable *sym = newsym(name, P_UNION, NULL, 0, C_UNION, 0, 0);
   appendsym(&Unionhead, &Uniontail, sym);
   return (sym);
 }
@@ -142,17 +142,17 @@ struct symtable *addunion(char *name)
 // Add an enum type or value to the enum list.
 // Class is C_ENUMTYPE or C_ENUMVAL.
 // Use posn to store the int value.
-struct symtable *addenum(char *name, int class, int value)
+struct symTable *addenum(char *name, int class, int value)
 {
-  struct symtable *sym = newsym(name, P_INT, NULL, 0, class, 0, value);
+  struct symTable *sym = newsym(name, P_INT, NULL, 0, class, 0, value);
   appendsym(&Enumhead, &Enumtail, sym);
   return (sym);
 }
 
 // Add a typedef to the typedef list
-struct symtable *addtypedef(char *name, int type, struct symtable *ctype)
+struct symTable *addtypedef(char *name, int type, struct symTable *ctype)
 {
-  struct symtable *sym = newsym(name, type, ctype, 0, C_TYPEDEF, 0, 0);
+  struct symTable *sym = newsym(name, type, ctype, 0, C_TYPEDEF, 0, 0);
   appendsym(&Typehead, &Typetail, sym);
   return (sym);
 }
@@ -160,7 +160,7 @@ struct symtable *addtypedef(char *name, int type, struct symtable *ctype)
 // Search for a symbol in a specific list.
 // Return a pointer to the found node or NULL if not found.
 // If class is not zero, also match on the given class
-static struct symtable *findsyminlist(char *s, struct symtable *list,
+static struct symTable *findsyminlist(char *s, struct symTable *list,
                                       int class)
 {
   for (; list != NULL; list = list->next)
@@ -172,16 +172,16 @@ static struct symtable *findsyminlist(char *s, struct symtable *list,
 
 // Determine if the symbol s is in the global symbol table.
 // Return a pointer to the found node or NULL if not found.
-struct symtable *findglob(char *s)
+struct symTable *findGlobal(char *s)
 {
   return (findsyminlist(s, Globhead, 0));
 }
 
 // Determine if the symbol s is in the local symbol table.
 // Return a pointer to the found node or NULL if not found.
-struct symtable *findlocl(char *s)
+struct symTable *findlocl(char *s)
 {
-  struct symtable *node;
+  struct symTable *node;
 
   // Look for a parameter if we are in a function's body
   if (Functionid)
@@ -195,9 +195,9 @@ struct symtable *findlocl(char *s)
 
 // Determine if the symbol s is in the symbol table.
 // Return a pointer to the found node or NULL if not found.
-struct symtable *findsymbol(char *s)
+struct symTable *findsymbol(char *s)
 {
-  struct symtable *node;
+  struct symTable *node;
 
   // Look for a parameter if we are in a function's body
   if (Functionid)
@@ -215,42 +215,42 @@ struct symtable *findsymbol(char *s)
 
 // Find a member in the member list
 // Return a pointer to the found node or NULL if not found.
-struct symtable *findmember(char *s)
+struct symTable *findmember(char *s)
 {
   return (findsyminlist(s, Membhead, 0));
 }
 
 // Find a struct in the struct list
 // Return a pointer to the found node or NULL if not found.
-struct symtable *findstruct(char *s)
+struct symTable *findStruct(char *s)
 {
   return (findsyminlist(s, Structhead, 0));
 }
 
 // Find a struct in the union list
 // Return a pointer to the found node or NULL if not found.
-struct symtable *findunion(char *s)
+struct symTable *findUnion(char *s)
 {
   return (findsyminlist(s, Unionhead, 0));
 }
 
 // Find an enum type in the enum list
 // Return a pointer to the found node or NULL if not found.
-struct symtable *findenumtype(char *s)
+struct symTable *findenumtype(char *s)
 {
   return (findsyminlist(s, Enumhead, C_ENUMTYPE));
 }
 
 // Find an enum value in the enum list
 // Return a pointer to the found node or NULL if not found.
-struct symtable *findenumval(char *s)
+struct symTable *findenumval(char *s)
 {
   return (findsyminlist(s, Enumhead, C_ENUMVAL));
 }
 
 // Find a type in the tyedef list
 // Return a pointer to the found node or NULL if not found.
-struct symtable *findtypedef(char *s)
+struct symTable *findtypedef(char *s)
 {
   return (findsyminlist(s, Typehead, 0));
 }
@@ -280,7 +280,7 @@ void freeloclsyms(void)
 void freestaticsyms(void)
 {
   // g points at current node, prev at the previous one
-  struct symtable *g, *prev = NULL;
+  struct symTable *g, *prev = NULL;
 
   // Walk the global table looking for static entries
   for (g = Globhead; g != NULL; g = g->next)
@@ -313,7 +313,7 @@ void freestaticsyms(void)
 }
 
 // Dump a single symbol
-static void dumpsym(struct symtable *sym, int indent)
+static void dumpsym(struct symTable *sym, int indent)
 {
   int i;
 
@@ -437,9 +437,9 @@ static void dumpsym(struct symtable *sym, int indent)
 }
 
 // Dump one symbol table
-void dumptable(struct symtable *head, char *name, int indent)
+void dumptable(struct symTable *head, char *name, int indent)
 {
-  struct symtable *sym;
+  struct symTable *sym;
 
   if (head != NULL && name != NULL)
     printf("%s\n--------\n", name);
@@ -454,4 +454,40 @@ void dumpsymtables(void)
   dumptable(Enumhead, "Enums", 0);
   printf("\n");
   dumptable(Typehead, "Typedefs", 0);
+}
+
+// Given a pointer to a symbol that may already exist
+// return true if this symbol doesn't exist. We use
+// this function to convert externs into globals
+int isNewSymbol(struct symTable *sym, int class,
+                  int type, struct symTable *ctype)
+{
+
+  // There is no existing symbol, thus is new
+  if (sym == NULL)
+    return (1);
+
+  // global versus extern: if they match that it's not new
+  // and we can convert the class to global
+  if ((sym->class == C_GLOBAL && class == C_EXTERN) || (sym->class == C_EXTERN && class == C_GLOBAL))
+  {
+
+    // If the types don't match, there's a problem
+    if (type != sym->type)
+      fatals("Type mismatch between global/extern", sym->name);
+
+    // Struct/unions, also compare the ctype
+    if (type >= P_STRUCT && ctype != sym->ctype)
+      fatals("Type mismatch between global/extern", sym->name);
+
+    // If we get to here, the types match, so mark the symbol
+    // as global
+    sym->class = C_GLOBAL;
+    // Return that symbol is not new
+    return (0);
+  }
+
+  // It must be a duplicate symbol if we get here
+  fatals("Duplicate global variable declaration", sym->name);
+  return (-1); // Keep -Wall happy
 }

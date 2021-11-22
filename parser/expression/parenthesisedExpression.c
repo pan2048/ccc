@@ -6,7 +6,7 @@ struct ASTnode *paren_expression(int ptp)
 {
   struct ASTnode *n;
   int type = 0;
-  struct symtable *ctype = NULL;
+  struct symTable *ctype = NULL;
 
   // Beginning of a parenthesised expression, skip the '('.
   scan(&Token);
@@ -30,7 +30,7 @@ struct ASTnode *paren_expression(int ptp)
   case T_UNION:
   case T_ENUM:
     // Get the type inside the parentheses
-    type = parse_cast(&ctype);
+    type = parseCast(&ctype);
 
     // Skip the closing ')' and then parse the following expression
     rparen();

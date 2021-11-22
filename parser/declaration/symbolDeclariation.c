@@ -5,10 +5,10 @@
 // have the identifier in the Token variable.
 // The class argument is the symbol's class.
 // Return a pointer to the symbol's entry in the symbol table
-struct symtable *symbol_declaration(int type, struct symtable *ctype,
+struct symTable *symbolDeclaration(int type, struct symTable *ctype,
                                     int class, struct ASTnode **tree)
 {
-  struct symtable *sym = NULL;
+  struct symTable *sym = NULL;
   char *varname = strDup(Text);
 
   // Ensure that we have an identifier.
@@ -40,7 +40,7 @@ struct symtable *symbol_declaration(int type, struct symtable *ctype,
   // Add the array or scalar variable to the symbol table
   if (Token.token == T_LBRACKET)
   {
-    sym = array_declaration(varname, type, ctype, class);
+    sym = arrayDeclaration(varname, type, ctype, class);
     *tree = NULL; // Local arrays are not initialised
   }
   else

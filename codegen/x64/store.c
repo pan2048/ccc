@@ -1,7 +1,7 @@
 #include "x64.h"
 
 // Store a register's value into a variable
-int cgStoreGlobal(int r, struct symtable *sym)
+int cgStoreGlobal(int r, struct symTable *sym)
 {
   if (cgTypeSize(sym->type) == 8)
   {
@@ -23,7 +23,7 @@ int cgStoreGlobal(int r, struct symtable *sym)
 }
 
 // Store a register's value into a local variable
-int cgStoreLocal(int r, struct symtable *sym)
+int cgStoreLocal(int r, struct symTable *sym)
 {
   if (cgTypeSize(sym->type) == 8)
   {

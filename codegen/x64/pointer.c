@@ -4,7 +4,7 @@
 // it points at into the same register
 int cgPointerDeref(int r, int type) {
   // Get the type that we are pointing to
-  int newtype = value_at(type);
+  int newtype = valueAt(type);
   // Now get the size of this type
   int size = cgTypeSize(newtype);
 

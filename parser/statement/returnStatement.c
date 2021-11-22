@@ -24,7 +24,7 @@ struct ASTnode *returnStatement() {
     tree = binexpr(0);
 
     // Ensure this is compatible with the function's type
-    tree = modify_type(tree, Functionid->type, Functionid->ctype, 0);
+    tree = modifyType(tree, Functionid->type, Functionid->ctype, 0);
     if (tree == NULL)
       fatal("Incompatible type to return");
 

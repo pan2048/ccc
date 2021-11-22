@@ -6,12 +6,12 @@
 struct ASTnode *primaryFactor(int ptp)
 {
   struct ASTnode *n;
-  struct symtable *enumptr;
-  struct symtable *varptr;
+  struct symTable *enumptr;
+  struct symTable *varptr;
   int id;
   int type = 0;
   int size, class;
-  struct symtable *ctype;
+  struct symTable *ctype;
 
   switch (Token.token)
   {
@@ -26,10 +26,10 @@ struct ASTnode *primaryFactor(int ptp)
     scan(&Token);
 
     // Get the type inside the parentheses
-    type = parse_stars(parse_type(&ctype, &class));
+    type = parseStars(parseType(&ctype, &class));
 
     // Get the type's size
-    size = typesize(type, ctype);
+    size = typeSize(type, ctype);
     rparen();
 
     // Make a leaf node int literal with the size
@@ -61,7 +61,7 @@ struct ASTnode *primaryFactor(int ptp)
 
     // Now make a leaf AST node for it. id is the string's label.
     genGlobStrEnd();
-    n = astMakeLeaf(A_STRLIT, pointer_to(P_CHAR), NULL, NULL, id);
+    n = astMakeLeaf(A_STRLIT, pointerTo(P_CHAR), NULL, NULL, id);
     break;
 
   case T_IDENT:

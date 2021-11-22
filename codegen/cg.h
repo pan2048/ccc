@@ -8,12 +8,12 @@ void cgDirectiveLineNumber(int line);
 void cgFilePreamble(char *filename);
 void cgFilePostamble();
 
-void cgFunctionPreamble(struct symtable *sym);
-void cgFunctionPostamble(struct symtable *sym);
-int cgFunctionCall(struct symtable *sym, int numargs);
+void cgFunctionPreamble(struct symTable *sym);
+void cgFunctionPostamble(struct symTable *sym);
+int cgFunctionCall(struct symTable *sym, int numargs);
 void cgFunctionCopyArg(int r, int argposn);
 
-void cgGlobalSym(struct symtable *node);
+void cgGlobalSym(struct symTable *node);
 void cgGlobalStr(int l, char *strvalue, int append);
 void cgGlobalStrEnd(void);
 
@@ -22,14 +22,14 @@ int cgCompareAndSet(int ASToperation, int r1, int r2, int type);
 int cgCompareAndJumpTo(int ASToperation, int r1, int r2, int label, int type);
 void cgOutputLabel(int label);
 void cgJumpTo(int label);
-void cgReturn(int reg, struct symtable *sym);
+void cgReturn(int reg, struct symTable *sym);
 
 void cgRegisterMove(int r1, int r2);
 int cgLoadLiteralInt(int value, int type);
-int cgLoadVariable(struct symtable *sym, int op);
+int cgLoadVariable(struct symTable *sym, int op);
 int cgLoadGlobalStr(int label);
 void cgLoadBoolean(int r, int val);
-int cgLoadAddress(struct symtable *sym);
+int cgLoadAddress(struct symTable *sym);
 
 int cgOpAdd(int r1, int r2);
 int cgOpSub(int r1, int r2);
@@ -54,8 +54,8 @@ void cgRegisterFree(int reg);
 void cgRegisterSpill();
 void cgRegisterUnSpill();
 
-int cgStoreGlobal(int r, struct symtable *sym);
-int cgStoreLocal(int r, struct symtable *sym);
+int cgStoreGlobal(int r, struct symTable *sym);
+int cgStoreLocal(int r, struct symTable *sym);
 
 void cgSwitch(int reg, int casecount, int toplabel,
 	      int *caselabel, int *caseval, int defaultlabel);

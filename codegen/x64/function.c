@@ -20,10 +20,10 @@ int _newLocalOffset(int size)
 }
 
 // Print out a function preamble
-void cgFunctionPreamble(struct symtable *sym)
+void cgFunctionPreamble(struct symTable *sym)
 {
   char *name = sym->name;
-  struct symtable *parm, *locvar;
+  struct symTable *parm, *locvar;
   int cnt;
   int paramOffset = 16;           // Any pushed params start at this stack offset
   int paramReg = FIRST_PARAM_REG; // Index to the first param register in above reg lists
@@ -72,7 +72,7 @@ void cgFunctionPreamble(struct symtable *sym)
 }
 
 // Print out a function postamble
-void cgFunctionPostamble(struct symtable *sym)
+void cgFunctionPostamble(struct symTable *sym)
 {
   cgOutputLabel(sym->st_endlabel);
   fprintf(Outfile, "\taddq\t$%d,%%rsp\n", stackOffset);
@@ -85,7 +85,7 @@ void cgFunctionPostamble(struct symtable *sym)
 // Call a function with the given symbol id.
 // Pop off any arguments pushed on the stack.
 // Return the register with the result
-int cgFunctionCall(struct symtable *sym, int numargs)
+int cgFunctionCall(struct symTable *sym, int numargs)
 {
   int outr;
 

@@ -4,11 +4,11 @@
 // Given the type, name and class of a scalar variable,
 // parse any initialisation value and allocate storage for it.
 // Return the variable's symbol table entry.
-struct symtable *scalarDeclaration(char *varname, int type,
-                                    struct symtable *ctype,
+struct symTable *scalarDeclaration(char *varname, int type,
+                                    struct symTable *ctype,
                                     int class, struct ASTnode **tree)
 {
-    struct symtable *sym = NULL;
+    struct symTable *sym = NULL;
     struct ASTnode *varnode, *exprnode;
     *tree = NULL;
 
@@ -19,12 +19,12 @@ struct symtable *scalarDeclaration(char *varname, int type,
     case C_EXTERN:
     case C_GLOBAL:
         // See if this variable is new or already exists
-        sym = findglob(varname);
-        if (is_new_symbol(sym, class, type, ctype))
-            sym = addglob(varname, type, ctype, S_VARIABLE, class, 1, 0);
+        sym = findGlobal(varname);
+        if (isNewSymbol(sym, class, type, ctype))
+            sym = addGlobal(varname, type, ctype, S_VARIABLE, class, 1, 0);
         break;
     case C_LOCAL:
-        sym = addlocl(varname, type, ctype, S_VARIABLE, 1);
+        sym = addLocal(varname, type, ctype, S_VARIABLE, 1);
         break;
     case C_PARAM:
         sym = addparm(varname, type, ctype, S_VARIABLE);
@@ -60,7 +60,7 @@ struct symtable *scalarDeclaration(char *varname, int type,
             exprnode->rvalue = 1;
 
             // Ensure the expression's type matches the variable
-            exprnode = modify_type(exprnode, varnode->type, varnode->ctype, 0);
+            exprnode = modifyType(exprnode, varnode->type, varnode->ctype, 0);
             if (exprnode == NULL)
                 fatal("Incompatible expression in assignment");
 

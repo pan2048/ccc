@@ -2,11 +2,11 @@
 #define _SYMBOL_TABLE_H_
 
 // Symbol table structure
-struct symtable
+struct symTable
 {
     char *name;              // Name of a symbol
     int type;                // Primitive type for the symbol
-    struct symtable *ctype;  // If struct/union, ptr to that type
+    struct symTable *ctype;  // If struct/union, ptr to that type
     int stype;               // Structural type for the symbol
     int class;               // Storage class for the symbol
     int size;                // Total size in bytes of this symbol
@@ -15,8 +15,8 @@ struct symtable
     int st_posn;             // For locals, the negative offset
                              // from the stack base pointer
     int *initlist;           // List of initial values
-    struct symtable *next;   // Next symbol in one list
-    struct symtable *member; // First member of a function, struct,
+    struct symTable *next;   // Next symbol in one list
+    struct symTable *member; // First member of a function, struct,
 };    
 
 
@@ -52,48 +52,50 @@ enum {
 
 
 // Symbol table lists
-extern struct symtable *Globhead, *Globtail;	  // Global variables and functions
-extern struct symtable *Loclhead, *Locltail;	  // Local variables
-extern struct symtable *Parmhead, *Parmtail;	  // Local parameters
-extern struct symtable *Membhead, *Membtail;	  // Temp list of struct/union members
-extern struct symtable *Structhead, *Structtail; // List of struct types
-extern struct symtable *Unionhead, *Uniontail;   // List of union types
-extern struct symtable *Enumhead,  *Enumtail;    // List of enum types and values
-extern struct symtable *Typehead,  *Typetail;    // List of typedefs
+extern struct symTable *Globhead, *Globtail;	  // Global variables and functions
+extern struct symTable *Loclhead, *Locltail;	  // Local variables
+extern struct symTable *Parmhead, *Parmtail;	  // Local parameters
+extern struct symTable *Membhead, *Membtail;	  // Temp list of struct/union members
+extern struct symTable *Structhead, *Structtail; // List of struct types
+extern struct symTable *Unionhead, *Uniontail;   // List of union types
+extern struct symTable *Enumhead,  *Enumtail;    // List of enum types and values
+extern struct symTable *Typehead,  *Typetail;    // List of typedefs
 
-extern struct symtable *Functionid; 	// Symbol ptr of the current function
+extern struct symTable *Functionid; 	// Symbol ptr of the current function
 
 void clear_symtable(void);
 void freeloclsyms(void);
 void freestaticsyms(void);
-void dumptable(struct symtable *head, char *name, int indent);
+void dumptable(struct symTable *head, char *name, int indent);
 void dumpsymtables(void);
 
 
 // sym.c
-void appendsym(struct symtable **head, struct symtable **tail,
-	       struct symtable *node);
-struct symtable *newsym(char *name, int type, struct symtable *ctype,
+void appendsym(struct symTable **head, struct symTable **tail,
+	       struct symTable *node);
+struct symTable *newsym(char *name, int type, struct symTable *ctype,
 			int stype, int class, int nelems, int posn);
-struct symtable *addglob(char *name, int type, struct symtable *ctype,
+struct symTable *addGlobal(char *name, int type, struct symTable *ctype,
 			 int stype, int class, int nelems, int posn);
-struct symtable *addlocl(char *name, int type, struct symtable *ctype,
+struct symTable *addLocal(char *name, int type, struct symTable *ctype,
 			 int stype, int nelems);
-struct symtable *addparm(char *name, int type, struct symtable *ctype,
+struct symTable *addparm(char *name, int type, struct symTable *ctype,
 			 int stype);
-struct symtable *addstruct(char *name);
-struct symtable *addunion(char *name);
-struct symtable *addmemb(char *name, int type, struct symtable *ctype,
+struct symTable *addStruct(char *name);
+struct symTable *addUnion(char *name);
+struct symTable *addmemb(char *name, int type, struct symTable *ctype,
 			 int stype, int nelems);
-struct symtable *addenum(char *name, int class, int value);
-struct symtable *addtypedef(char *name, int type, struct symtable *ctype);
-struct symtable *findglob(char *s);
-struct symtable *findlocl(char *s);
-struct symtable *findsymbol(char *s);
-struct symtable *findmember(char *s);
-struct symtable *findstruct(char *s);
-struct symtable *findunion(char *s);
-struct symtable *findenumtype(char *s);
-struct symtable *findenumval(char *s);
-struct symtable *findtypedef(char *s);
+struct symTable *addenum(char *name, int class, int value);
+struct symTable *addtypedef(char *name, int type, struct symTable *ctype);
+struct symTable *findGlobal(char *s);
+struct symTable *findlocl(char *s);
+struct symTable *findsymbol(char *s);
+struct symTable *findmember(char *s);
+struct symTable *findStruct(char *s);
+struct symTable *findUnion(char *s);
+struct symTable *findenumtype(char *s);
+struct symTable *findenumval(char *s);
+struct symTable *findtypedef(char *s);
+int isNewSymbol(struct symTable *sym, int class, 
+		  int type, struct symTable *ctype) ;
 #endif
