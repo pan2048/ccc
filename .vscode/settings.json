@@ -1,0 +1,20 @@
+{
+    "files.associations": {
+        "stdlib.h": "c",
+        "*.tcc": "c",
+        "functional": "c",
+        "ranges": "c",
+        "streambuf": "c",
+        "lib.h": "c",
+        "x64.h": "c",
+        "main.h": "c",
+        "model.h": "c",
+        "parser.h": "c",
+        "lexer.h": "c",
+        "cstdlib": "c",
+        "memory": "c",
+        "cerrno": "c",
+        "istream": "c",
+        "random": "c"
+    }
+}
