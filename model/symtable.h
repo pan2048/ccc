@@ -89,12 +89,12 @@ struct symTable *addenum(char *name, int class, int value);
 struct symTable *addtypedef(char *name, int type, struct symTable *ctype);
 struct symTable *findGlobal(char *s);
 struct symTable *findlocl(char *s);
-struct symTable *findsymbol(char *s);
+struct symTable *findSymbol(char *s);
 struct symTable *findmember(char *s);
 struct symTable *findStruct(char *s);
 struct symTable *findUnion(char *s);
 struct symTable *findenumtype(char *s);
-struct symTable *findenumval(char *s);
+struct symTable *findEnumVal(char *s);
 struct symTable *findtypedef(char *s);
 int isNewSymbol(struct symTable *sym, int class, 
 		  int type, struct symTable *ctype) ;

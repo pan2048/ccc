@@ -80,7 +80,7 @@ struct symTable *functionDeclaration(char *funcname, int type,
 
     // Text has the identifier's name. If this exists and is a
     // function, get the id. Otherwise, set oldfuncsym to NULL.
-    if ((oldfuncsym = findsymbol(funcname)) != NULL)
+    if ((oldfuncsym = findSymbol(funcname)) != NULL)
         if (oldfuncsym->stype != S_FUNCTION) 
         {
             oldfuncsym = NULL;

@@ -15,7 +15,7 @@ struct ASTnode *whileStatement()
     // and the ')' following. Force a
     // non-comparison to be boolean
     // the tree's operation is a comparison.
-    condAST = binexpr(0);
+    condAST = binaryExpression(0);
     if (condAST->op < A_EQ || condAST->op > A_GE)
         condAST = astMakeUnary(A_TOBOOL, condAST->type, condAST->ctype, condAST, NULL, 0);
     rparen();
@@ -23,7 +23,7 @@ struct ASTnode *whileStatement()
     // Get the AST for the statement.
     // Update the loop depth in the process
     Looplevel++;
-    bodyAST = singleStatement();
+    bodyAST = statement();
     Looplevel--;
 
     // Build and return the AST for this statement

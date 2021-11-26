@@ -48,7 +48,7 @@ void enumDeclaration()
     name = strDup(Text);
 
     // Ensure this enum value hasn't been declared before
-    etype = findenumval(name);
+    etype = findEnumVal(name);
     if (etype != NULL)
       fatals("enum value redeclared:", Text);
 

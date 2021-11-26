@@ -64,7 +64,7 @@ struct symTable *newsym(char *name, int type, struct symTable *ctype,
   // For pointers and integer types, set the size
   // of the symbol. structs and union declarations
   // manually set this up themselves.
-  if (typeIsPointer(type) || intType(type))
+  if (typeIsPointer(type) || typeIsInt(type))
     node->size = nelems * typeSize(type, ctype);
 
   node->st_posn = posn;
@@ -195,7 +195,7 @@ struct symTable *findlocl(char *s)
 
 // Determine if the symbol s is in the symbol table.
 // Return a pointer to the found node or NULL if not found.
-struct symTable *findsymbol(char *s)
+struct symTable *findSymbol(char *s)
 {
   struct symTable *node;
 
@@ -243,7 +243,7 @@ struct symTable *findenumtype(char *s)
 
 // Find an enum value in the enum list
 // Return a pointer to the found node or NULL if not found.
-struct symTable *findenumval(char *s)
+struct symTable *findEnumVal(char *s)
 {
   return (findsyminlist(s, Enumhead, C_ENUMVAL));
 }

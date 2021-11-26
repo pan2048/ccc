@@ -6,7 +6,7 @@
 
 // Return true if a type is an int type
 // of any size, false otherwise
-int intType(int type)
+int typeIsInt(int type)
 {
   return (((type & 0xf) == 0) && (type >= P_CHAR && type <= P_LONG));
 }
@@ -19,7 +19,7 @@ int typeIsPointer(int type)
 
 // Given a primitive type, return
 // the type which is a pointer to it
-int pointerTo(int type)
+int typePointerTo(int type)
 {
   if ((type & 0xf) == 0xf)
     fatald("Unrecognised in pointer_to: type", type);
@@ -28,7 +28,7 @@ int pointerTo(int type)
 
 // Given a primitive pointer type, return
 // the type which it points to
-int valueAt(int type)
+int typeValueAt(int type)
 {
   if ((type & 0xf) == 0x0)
     fatald("Unrecognised in value_at: type", type);
@@ -50,7 +50,7 @@ int typeSize(int type, struct symTable *ctype)
 // if no changes occurred, a modified tree, or NULL if the
 // tree is not compatible with the given type.
 // If this will be part of a binary operation, the AST op is not zero.
-struct ASTnode *modifyType(struct ASTnode *tree, int rtype,
+struct ASTnode *typeModify(struct ASTnode *tree, int rtype,
                             struct symTable *rctype, int op)
 {
   int ltype;
@@ -61,9 +61,9 @@ struct ASTnode *modifyType(struct ASTnode *tree, int rtype,
   // For A_LOGOR and A_LOGAND, both types have to be int or pointer types
   if (op == A_LOGOR || op == A_LOGAND)
   {
-    if (!intType(ltype) && !typeIsPointer(ltype))
+    if (!typeIsInt(ltype) && !typeIsPointer(ltype))
       return (NULL);
-    if (!intType(ltype) && !typeIsPointer(rtype))
+    if (!typeIsInt(ltype) && !typeIsPointer(rtype))
       return (NULL);
     return (tree);
   }
@@ -75,7 +75,7 @@ struct ASTnode *modifyType(struct ASTnode *tree, int rtype,
     fatal("Don't know how to do this yet");
 
   // Compare scalar int types
-  if (intType(ltype) && intType(rtype))
+  if (typeIsInt(ltype) && typeIsInt(rtype))
   {
 
     // Both types same, nothing to do
@@ -104,7 +104,7 @@ struct ASTnode *modifyType(struct ASTnode *tree, int rtype,
 
     // A comparison of the same type for a non-binary operation is OK,
     // or when the left tree is of  `void *` type.
-    if (op == 0 && (ltype == rtype || ltype == pointerTo(P_VOID)))
+    if (op == 0 && (ltype == rtype || ltype == typePointerTo(P_VOID)))
       return (tree);
   }
 
@@ -115,9 +115,9 @@ struct ASTnode *modifyType(struct ASTnode *tree, int rtype,
 
     // Left is int type, right is pointer type and the size
     // of the original type is >1: scale the left
-    if (intType(ltype) && typeIsPointer(rtype))
+    if (typeIsInt(ltype) && typeIsPointer(rtype))
     {
-      rsize = genPrimSize(valueAt(rtype));
+      rsize = genPrimSize(typeValueAt(rtype));
       if (rsize > 1)
         return (astMakeUnary(A_SCALE, rtype, rctype, tree, NULL, rsize));
       else
@@ -128,3 +128,4 @@ struct ASTnode *modifyType(struct ASTnode *tree, int rtype,
   // If we get here, the types are not compatible
   return (NULL);
 }
+

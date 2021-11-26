@@ -1,24 +1,24 @@
-#include "../../codegen/gen.h"
 #include "../parser.h"
 
 // Return an AST tree whose root is a binary operator.
-// Parameter ptp is the previous token's precedence.
-struct ASTnode *binexpr(int ptp)
+// Parameter previousTokenPrecedence is the previous token's precedence.
+struct ASTnode *binaryExpression(int previousTokenPrecedence)
 {
-  struct ASTnode *left, *right;
-  struct ASTnode *ltemp, *rtemp;
-  int ASTop;
-  int tokentype;
+  struct ASTnode *left;
+  int tokenType;
+  struct ASTnode *right;
+  int ASTOperation;
+  struct ASTnode *lTemp, *rTemp;
 
   // Get the tree on the left.
   // Fetch the next token at the same time.
-  left = prefix(ptp);
+  left = prefixExpression(previousTokenPrecedence);
 
   // If we hit one of several terminating tokens, return just the left node
-  tokentype = Token.token;
-  if (tokentype == T_SEMI || tokentype == T_RPAREN ||
-      tokentype == T_RBRACKET || tokentype == T_COMMA ||
-      tokentype == T_COLON || tokentype == T_RBRACE)
+  tokenType = Token.token;
+  if (tokenType == T_SEMI || tokenType == T_RPAREN ||
+      tokenType == T_RBRACKET || tokenType == T_COMMA ||
+      tokenType == T_COLON || tokenType == T_RBRACE)
   {
     left->rvalue = 1;
     return (left);
@@ -27,30 +27,30 @@ struct ASTnode *binexpr(int ptp)
   // While the precedence of this token is more than that of the
   // previous token precedence, or it's right associative and
   // equal to the previous token's precedence
-  while ((op_precedence(tokentype) > ptp) ||
-         (rightassoc(tokentype) && op_precedence(tokentype) == ptp))
+  while ((tokenOperatorPrecedence(tokenType) > previousTokenPrecedence) ||
+         (tokenRightAssociate(tokenType) && tokenOperatorPrecedence(tokenType) == previousTokenPrecedence))
   {
     // Fetch in the next integer literal
     scan(&Token);
 
-    // Recursively call binexpr() with the
+    // Recursively call binaryExpression() with the
     // precedence of our token to build a sub-tree
-    right = binexpr(op_precedence(tokentype));
+    right = binaryExpression(tokenOperatorPrecedence(tokenType));
 
     // Determine the operation to be performed on the sub-trees
-    ASTop = binastop(tokentype);
+    ASTOperation = tokenBinaryAstOperation(tokenType);
 
-    switch (ASTop)
+    switch (ASTOperation)
     {
     case A_TERNARY:
       // Ensure we have a ':' token, scan in the expression after it
       match(T_COLON, ":");
-      ltemp = binexpr(0);
+      lTemp = binaryExpression(0);
 
       // Build and return the AST for this statement. Use the middle
       // expression's type as the return type. XXX We should also
       // consider the third expression's type.
-      return (astMakeNode(A_TERNARY, right->type, right->ctype, left, right, ltemp, NULL, 0));
+      return (astMakeNode(A_TERNARY, right->type, right->ctype, left, right, lTemp, NULL, 0));
 
     case A_ASSIGN:
       // Assignment
@@ -58,16 +58,16 @@ struct ASTnode *binexpr(int ptp)
       right->rvalue = 1;
 
       // Ensure the right's type matches the left
-      right = modifyType(right, left->type, left->ctype, 0);
+      right = typeModify(right, left->type, left->ctype, 0);
       if (right == NULL)
         fatal("Incompatible expression in assignment");
 
       // Make an assignment AST tree. However, switch
       // left and right around, so that the right expression's
       // code will be generated before the left expression
-      ltemp = left;
+      lTemp = left;
       left = right;
-      right = ltemp;
+      right = lTemp;
       break;
 
     default:
@@ -78,24 +78,24 @@ struct ASTnode *binexpr(int ptp)
 
       // Ensure the two types are compatible by trying
       // to modify each tree to match the other's type.
-      ltemp = modifyType(left, right->type, right->ctype, ASTop);
-      rtemp = modifyType(right, left->type, left->ctype, ASTop);
-      if (ltemp == NULL && rtemp == NULL)
+      lTemp = typeModify(left, right->type, right->ctype, ASTOperation);
+      rTemp = typeModify(right, left->type, left->ctype, ASTOperation);
+      if (lTemp == NULL && rTemp == NULL)
       {
         fatal("Incompatible types in binary expression");
       }
-      if (ltemp != NULL)
-        left = ltemp;
-      if (rtemp != NULL)
-        right = rtemp;
+      if (lTemp != NULL)
+        left = lTemp;
+      if (rTemp != NULL)
+        right = rTemp;
     }
 
     // Join that sub-tree with ours. Convert the token
     // into an AST operation at the same time.
-    left = astMakeNode(binastop(tokentype), left->type, left->ctype, left, NULL, right, NULL, 0);
+    left = astMakeNode(tokenBinaryAstOperation(tokenType), left->type, left->ctype, left, NULL, right, NULL, 0);
 
     // Some operators produce an int result regardless of their operands
-    switch (binastop(tokentype))
+    switch (tokenBinaryAstOperation(tokenType))
     {
     case A_LOGOR:
     case A_LOGAND:
@@ -110,10 +110,10 @@ struct ASTnode *binexpr(int ptp)
 
     // Update the details of the current token.
     // If we hit a terminating token, return just the left node
-    tokentype = Token.token;
-    if (tokentype == T_SEMI || tokentype == T_RPAREN ||
-        tokentype == T_RBRACKET || tokentype == T_COMMA ||
-        tokentype == T_COLON || tokentype == T_RBRACE)
+    tokenType = Token.token;
+    if (tokenType == T_SEMI || tokenType == T_RPAREN ||
+        tokenType == T_RBRACKET || tokenType == T_COMMA ||
+        tokenType == T_COLON || tokenType == T_RBRACE)
     {
       left->rvalue = 1;
       return (left);

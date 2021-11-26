@@ -16,8 +16,8 @@ void cgGlobalSym(struct symTable *node)
   // and the type of the variable
   if (node->stype == S_ARRAY)
   {
-    size = typeSize(valueAt(node->type), node->ctype);
-    type = valueAt(node->type);
+    size = typeSize(typeValueAt(node->type), node->ctype);
+    type = typeValueAt(node->type);
   }
   else
   {
@@ -52,7 +52,7 @@ void cgGlobalSym(struct symTable *node)
     case 8:
       // Generate the pointer to a string literal. Treat a zero value
       // as actually zero, not the label L0
-      if (node->initlist != NULL && type == pointerTo(P_CHAR) && initvalue != 0)
+      if (node->initlist != NULL && type == typePointerTo(P_CHAR) && initvalue != 0)
         fprintf(Outfile, "\t.quad\tL%d\n", initvalue);
       else
         fprintf(Outfile, "\t.quad\t%d\n", initvalue);

@@ -10,7 +10,7 @@
 
 // Parse a prefix expression and return
 // a sub-tree representing it.
-struct ASTnode *prefix(int ptp)
+struct ASTnode *prefixExpression(int previousTokenPrecedence)
 {
   struct ASTnode *tree;
   switch (Token.token)
@@ -19,7 +19,7 @@ struct ASTnode *prefix(int ptp)
     // Get the next token and parse it
     // recursively as a prefix expression
     scan(&Token);
-    tree = prefix(ptp);
+    tree = prefixExpression(previousTokenPrecedence);
 
     // Ensure that it's an identifier
     if (tree->op != A_IDENT)
@@ -32,14 +32,14 @@ struct ASTnode *prefix(int ptp)
     // Now change the operator to A_ADDR and the type to
     // a pointer to the original type
     tree->op = A_ADDR;
-    tree->type = pointerTo(tree->type);
+    tree->type = typePointerTo(tree->type);
     break;
   case T_STAR:
     // Get the next token and parse it
     // recursively as a prefix expression.
     // Make it an rvalue
     scan(&Token);
-    tree = prefix(ptp);
+    tree = prefixExpression(previousTokenPrecedence);
     tree->rvalue = 1;
 
     // Ensure the tree's type is a pointer
@@ -48,13 +48,13 @@ struct ASTnode *prefix(int ptp)
 
     // Prepend an A_DEREF operation to the tree
     tree =
-        astMakeUnary(A_DEREF, valueAt(tree->type), tree->ctype, tree, NULL, 0);
+        astMakeUnary(A_DEREF, typeValueAt(tree->type), tree->ctype, tree, NULL, 0);
     break;
   case T_MINUS:
     // Get the next token and parse it
     // recursively as a prefix expression
     scan(&Token);
-    tree = prefix(ptp);
+    tree = prefixExpression(previousTokenPrecedence);
 
     // Prepend a A_NEGATE operation to the tree and
     // make the child an rvalue. Because chars are unsigned,
@@ -68,7 +68,7 @@ struct ASTnode *prefix(int ptp)
     // Get the next token and parse it
     // recursively as a prefix expression
     scan(&Token);
-    tree = prefix(ptp);
+    tree = prefixExpression(previousTokenPrecedence);
 
     // Prepend a A_INVERT operation to the tree and
     // make the child an rvalue.
@@ -79,7 +79,7 @@ struct ASTnode *prefix(int ptp)
     // Get the next token and parse it
     // recursively as a prefix expression
     scan(&Token);
-    tree = prefix(ptp);
+    tree = prefixExpression(previousTokenPrecedence);
 
     // Prepend a A_LOGNOT operation to the tree and
     // make the child an rvalue.
@@ -90,7 +90,7 @@ struct ASTnode *prefix(int ptp)
     // Get the next token and parse it
     // recursively as a prefix expression
     scan(&Token);
-    tree = prefix(ptp);
+    tree = prefixExpression(previousTokenPrecedence);
 
     // For now, ensure it's an identifier
     if (tree->op != A_IDENT)
@@ -103,7 +103,7 @@ struct ASTnode *prefix(int ptp)
     // Get the next token and parse it
     // recursively as a prefix expression
     scan(&Token);
-    tree = prefix(ptp);
+    tree = prefixExpression(previousTokenPrecedence);
 
     // For now, ensure it's an identifier
     if (tree->op != A_IDENT)
@@ -113,7 +113,7 @@ struct ASTnode *prefix(int ptp)
     tree = astMakeUnary(A_PREDEC, tree->type, tree->ctype, tree, NULL, 0);
     break;
   default:
-    tree = postfix(ptp);
+    tree = postfixExpression(previousTokenPrecedence);
   }
   return (tree);
 }

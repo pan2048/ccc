@@ -20,20 +20,20 @@ struct ASTnode *ifStatement()
   // and the ')' following. Force a
   // non-comparison to be boolean
   // the tree's operation is a comparison.
-  condAST = binexpr(0);
+  condAST = binaryExpression(0);
   if (condAST->op < A_EQ || condAST->op > A_GE)
     condAST = astMakeUnary(A_TOBOOL, condAST->type, condAST->ctype, condAST, NULL, 0);
   rparen();
 
   // Get the AST for the statement
-  trueAST = singleStatement();
+  trueAST = statement();
 
   // If we have an 'else', skip it
   // and get the AST for the statement
   if (Token.token == T_ELSE)
   {
     scan(&Token);
-    falseAST = singleStatement();
+    falseAST = statement();
   }
 
   // Build and return the AST for this statement

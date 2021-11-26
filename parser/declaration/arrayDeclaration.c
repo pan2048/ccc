@@ -36,11 +36,11 @@ struct symTable *arrayDeclaration(char *varname, int type, struct symTable *ctyp
   case C_GLOBAL:
     // See if this variable is new or already exists
     sym = findGlobal(varname);
-    if (isNewSymbol(sym, class, pointerTo(type), ctype))
-      sym = addGlobal(varname, pointerTo(type), ctype, S_ARRAY, class, 0, 0);
+    if (isNewSymbol(sym, class, typePointerTo(type), ctype))
+      sym = addGlobal(varname, typePointerTo(type), ctype, S_ARRAY, class, 0, 0);
     break;
   case C_LOCAL:
-    sym = addLocal(varname, pointerTo(type), ctype, S_ARRAY, 0);
+    sym = addLocal(varname, typePointerTo(type), ctype, S_ARRAY, 0);
     break;
   default:
     fatal("Declaration of array parameters is not implemented");

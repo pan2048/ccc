@@ -3,6 +3,7 @@
 
 
 #include "../external/external.h"
+#include "../lib/lib.h"
 
 // Token types
 enum
@@ -95,5 +96,9 @@ struct token
 extern struct token Token;	
 extern struct token Peektoken;	
 extern char *TokenString[];
+
+int tokenRightAssociate(int tokentype);
+int tokenBinaryAstOperation(int tokentype);
+int tokenOperatorPrecedence(int tokentype);
 
 #endif

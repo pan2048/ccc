@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "../parser.h"
 
 // Given a type, parse an expression of literals and ensure
 // that the type of this expression matches the given type.
@@ -10,7 +10,7 @@ int literal(int type)
   struct ASTnode *tree;
 
   // Parse the expression and optimise the resulting AST tree
-  tree = optimise(binexpr(0));
+  tree = optimise(binaryExpression(0));
 
   // If there's a cast, get the child and
   // mark it as having the type from the cast
@@ -25,7 +25,7 @@ int literal(int type)
     fatal("Cannot initialise globals with a general expression");
 
   // If the type is char * and
-  if (type == pointerTo(P_CHAR))
+  if (type == typePointerTo(P_CHAR))
   {
     // We have a string literal, return the label number
     if (tree->op == A_STRLIT)
@@ -37,7 +37,7 @@ int literal(int type)
 
   // We only get here with an integer literal. The input type
   // is an integer type and is wide enough to hold the literal value
-  if (intType(type) && typeSize(type, NULL) >= typeSize(tree->type, NULL))
+  if (typeIsInt(type) && typeSize(type, NULL) >= typeSize(tree->type, NULL))
     return (tree->a_intvalue);
 
   fatal("Type mismatch: literal vs. variable");

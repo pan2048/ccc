@@ -20,7 +20,7 @@ struct ASTnode *compoundStatement(int inswitch)
       return (left);
 
     // Parse a single statement
-    tree = singleStatement();
+    tree = statement();
 
     // For each new tree, either save it in left
     // if left is empty, or glue the left and the

@@ -21,7 +21,7 @@ struct ASTnode *forStatement() {
   // Get the condition and the ';'.
   // Force a non-comparison to be boolean
   // the tree's operation is a comparison.
-  conditionAST = binexpr(0);
+  conditionAST = binaryExpression(0);
   if (conditionAST->op < A_EQ || conditionAST->op > A_GE)
     conditionAST = astMakeUnary(A_TOBOOL, conditionAST->type, conditionAST->ctype, conditionAST, NULL, 0);
   semi();
@@ -33,7 +33,7 @@ struct ASTnode *forStatement() {
   // Get the statement which is the body
   // Update the loop depth in the process
   Looplevel++;
-  bodyAST = singleStatement();
+  bodyAST = statement();
   Looplevel--;
 
   // Glue the statement and the postop tree

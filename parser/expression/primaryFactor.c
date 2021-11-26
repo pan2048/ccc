@@ -3,7 +3,7 @@
 
 // Parse a primary factor and return an
 // AST node representing it.
-struct ASTnode *primaryFactor(int ptp)
+struct ASTnode *primaryFactor(int previousTokenPrecedence)
 {
   struct ASTnode *n;
   struct symTable *enumptr;
@@ -61,20 +61,20 @@ struct ASTnode *primaryFactor(int ptp)
 
     // Now make a leaf AST node for it. id is the string's label.
     genGlobStrEnd();
-    n = astMakeLeaf(A_STRLIT, pointerTo(P_CHAR), NULL, NULL, id);
+    n = astMakeLeaf(A_STRLIT, typePointerTo(P_CHAR), NULL, NULL, id);
     break;
 
   case T_IDENT:
     // If the identifier matches an enum value,
     // return an A_INTLIT node
-    if ((enumptr = findenumval(Text)) != NULL)
+    if ((enumptr = findEnumVal(Text)) != NULL)
     {
       n = astMakeLeaf(A_INTLIT, P_INT, NULL, NULL, enumptr->st_posn);
       break;
     }
 
     // See if this identifier exists as a symbol. For arrays, set rvalue to 1.
-    if ((varptr = findsymbol(Text)) == NULL)
+    if ((varptr = findSymbol(Text)) == NULL)
     {
       fatals("Unknown variable or function", Text);
     }
@@ -92,14 +92,14 @@ struct ASTnode *primaryFactor(int ptp)
       scan(&Token);
       if (Token.token != T_LPAREN)
         fatals("Function name used without parentheses", Text);
-      return (funccall());
+      return (funcCall());
     default:
       fatals("Identifier not a scalar or array variable", Text);
     }
     break;
 
   case T_LPAREN:
-    return (paren_expression(ptp));
+    return (parenthesisedExpression(previousTokenPrecedence));
 
   default:
     fatals("Expecting a primary expression, got token", Token.tokstr);

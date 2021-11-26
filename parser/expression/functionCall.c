@@ -1,14 +1,14 @@
 #include "../parser.h"
 
 // Parse a function call and return its AST
-struct ASTnode *funccall()
+struct ASTnode *funcCall()
 {
   struct ASTnode *tree;
   struct symTable *funcptr;
 
   // Check that the identifier has been defined as a function,
   // then make a leaf node for it.
-  if ((funcptr = findsymbol(Text)) == NULL || funcptr->stype != S_FUNCTION)
+  if ((funcptr = findSymbol(Text)) == NULL || funcptr->stype != S_FUNCTION)
   {
     fatals("Undeclared function", Text);
   }

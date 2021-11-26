@@ -27,7 +27,7 @@ int cgLoadVariable(struct symTable *sym, int op)
   // of the type that it points to as any
   // increment or decrement. If not, it's one.
   if (typeIsPointer(sym->type))
-    offset = typeSize(valueAt(sym->type), sym->ctype);
+    offset = typeSize(typeValueAt(sym->type), sym->ctype);
 
   // Negate the offset for decrements
   if (op == A_PREDEC || op == A_POSTDEC)

@@ -14,12 +14,12 @@ struct ASTnode *switchStatement()
     lparen();
 
     // Get the switch expression, the ')' and the '{'
-    left = binexpr(0);
+    left = binaryExpression(0);
     rparen();
     lbrace();
 
     // Ensure that this is of int type
-    if (!intType(left->type))
+    if (!typeIsInt(left->type))
         fatal("Switch expression is not of integer type");
 
     // Build an A_SWITCH subtree with the expression as
@@ -55,7 +55,7 @@ struct ASTnode *switchStatement()
             {
                 ASTop = A_CASE;
                 scan(&Token);
-                left = binexpr(0);
+                left = binaryExpression(0);
 
                 // Ensure the case value is an integer literal
                 if (left->op != A_INTLIT)

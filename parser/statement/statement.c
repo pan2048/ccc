@@ -1,7 +1,7 @@
 #include "../parser.h"
 
 // Parse a single statement and return its AST.
-struct ASTnode *singleStatement()
+struct ASTnode *statement()
 {
   struct ASTnode *stmt;
   struct symTable *ctype;
@@ -26,7 +26,7 @@ struct ASTnode *singleStatement()
     // Otherwise, fall down to the parse_type() call.
     if (findtypedef(Text) == NULL)
     {
-      stmt = binexpr(0);
+      stmt = binaryExpression(0);
       stmt->linenum = linenum;
       semi();
       return (stmt);
@@ -73,7 +73,7 @@ struct ASTnode *singleStatement()
   default:
     // For now, see if this is an expression.
     // This catches assignment statements.
-    stmt = binexpr(0);
+    stmt = binaryExpression(0);
     stmt->linenum = linenum;
     semi();
     return (stmt);

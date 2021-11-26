@@ -1,7 +1,7 @@
 #include "../parser.h"
 
 // Parse the index into an array and return an AST tree for it
-struct ASTnode *array_access(struct ASTnode *left)
+struct ASTnode *arrayAccess(struct ASTnode *left)
 {
   struct ASTnode *right;
 
@@ -13,24 +13,24 @@ struct ASTnode *array_access(struct ASTnode *left)
   scan(&Token);
 
   // Parse the following expression
-  right = binexpr(0);
+  right = binaryExpression(0);
 
   // Get the ']'
   match(T_RBRACKET, "]");
 
   // Ensure that this is of int type
-  if (!intType(right->type))
+  if (!typeIsInt(right->type))
     fatal("Array index is not of integer type");
 
   // Make the left tree an rvalue
   left->rvalue = 1;
 
   // Scale the index by the size of the element's type
-  right = modifyType(right, left->type, left->ctype, A_ADD);
+  right = typeModify(right, left->type, left->ctype, A_ADD);
 
   // Return an AST tree where the array's base has the offset added to it,
   // and dereference the element. Still an lvalue at this point.
   left = astMakeNode(A_ADD, left->type, left->ctype, left, NULL, right, NULL, 0);
-  left = astMakeUnary(A_DEREF, valueAt(left->type), left->ctype, left, NULL, 0);
+  left = astMakeUnary(A_DEREF, typeValueAt(left->type), left->ctype, left, NULL, 0);
   return (left);
 }

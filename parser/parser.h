@@ -8,18 +8,17 @@
 extern int Looplevel;			// Depth of nested loops
 extern int Switchlevel;		// Depth of nested switches
 
-struct ASTnode *expressionList(int endtoken);
-struct ASTnode *funccall();
-struct ASTnode *array_access(struct ASTnode *left);
-struct ASTnode *member_access(struct ASTnode *left, int withpointer);
-struct ASTnode *paren_expression(int ptp);
-struct ASTnode *primaryFactor(int ptp);
-struct ASTnode *binexpr(int ptp);
-struct ASTnode *prefix(int ptp);
-int op_precedence(int tokentype);
-int rightassoc(int tokentype);
-int binastop(int tokentype);
-struct ASTnode *postfix(int ptp);
+struct ASTnode *expressionList(int endToken);
+struct ASTnode *funcCall();
+struct ASTnode *arrayAccess(struct ASTnode *left);
+struct ASTnode *memberAccess(struct ASTnode *left, int withpointer);
+struct ASTnode *parenthesisedExpression(int previousTokenPrecedence);
+struct ASTnode *primaryFactor(int previousTokenPrecedence);
+struct ASTnode *binaryExpression(int previousTokenPrecedence);
+struct ASTnode *prefixExpression(int previousTokenPrecedence);
+
+
+struct ASTnode *postfixExpression(int ptp);
 
 
 int parseType(struct symTable **ctype, int *class);
@@ -47,7 +46,7 @@ struct ASTnode *forStatement();
 struct ASTnode *ifStatement();
 struct ASTnode *whileStatement();
 struct ASTnode *switchStatement();
-struct ASTnode *singleStatement();
+struct ASTnode *statement();
 struct ASTnode *compoundStatement(int inswitch);
 struct ASTnode *returnStatement();
 struct ASTnode *breakStatement();

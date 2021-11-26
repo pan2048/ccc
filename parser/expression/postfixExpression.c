@@ -3,7 +3,7 @@
 // Parse a postfix expression and return
 // an AST node representing it. The
 // identifier is already in Text.
-struct ASTnode *postfix(int ptp)
+struct ASTnode *postfixExpression(int ptp)
 {
   struct ASTnode *n;
 
@@ -17,17 +17,17 @@ struct ASTnode *postfix(int ptp)
     {
     case T_LBRACKET:
       // An array reference
-      n = array_access(n);
+      n = arrayAccess(n);
       break;
 
     case T_DOT:
       // Access into a struct or union
-      n = member_access(n, 0);
+      n = memberAccess(n, 0);
       break;
 
     case T_ARROW:
       // Pointer access into a struct or union
-      n = member_access(n, 1);
+      n = memberAccess(n, 1);
       break;
 
     case T_INC:

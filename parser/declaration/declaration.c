@@ -116,7 +116,7 @@ int parseStars(int type)
   {
     if (Token.token != T_STAR)
       break;
-    type = pointerTo(type);
+    type = typePointerTo(type);
     scan(&Token);
   }
   return (type);

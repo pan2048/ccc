@@ -56,11 +56,11 @@ struct symTable *scalarDeclaration(char *varname, int type,
             varnode = astMakeLeaf(A_IDENT, sym->type, sym->ctype, sym, 0);
 
             // Get the expression for the assignment, make into a rvalue
-            exprnode = binexpr(0);
+            exprnode = binaryExpression(0);
             exprnode->rvalue = 1;
 
             // Ensure the expression's type matches the variable
-            exprnode = modifyType(exprnode, varnode->type, varnode->ctype, 0);
+            exprnode = typeModify(exprnode, varnode->type, varnode->ctype, 0);
             if (exprnode == NULL)
                 fatal("Incompatible expression in assignment");
 

@@ -21,10 +21,10 @@ struct ASTnode *returnStatement() {
     lparen();
 
     // Parse the following expression
-    tree = binexpr(0);
+    tree = binaryExpression(0);
 
     // Ensure this is compatible with the function's type
-    tree = modifyType(tree, Functionid->type, Functionid->ctype, 0);
+    tree = typeModify(tree, Functionid->type, Functionid->ctype, 0);
     if (tree == NULL)
       fatal("Incompatible type to return");
 

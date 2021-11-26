@@ -2,7 +2,7 @@
 
 // Parse a parenthesised expression and
 // return an AST node representing it.
-struct ASTnode *paren_expression(int ptp)
+struct ASTnode *parenthesisedExpression(int previousTokenPrecedence)
 {
   struct ASTnode *n;
   int type = 0;
@@ -19,7 +19,7 @@ struct ASTnode *paren_expression(int ptp)
     // If not, treat it as an expression.
     if (findtypedef(Text) == NULL)
     {
-      n = binexpr(0); // ptp is zero as expression inside ( )
+      n = binaryExpression(0); // ptp is zero as expression inside ( )
       break;
     }
   case T_VOID:
@@ -36,7 +36,7 @@ struct ASTnode *paren_expression(int ptp)
     rparen();
 
   default:
-    n = binexpr(ptp); // Scan in the expression. We pass in ptp
+    n = binaryExpression(previousTokenPrecedence); // Scan in the expression. We pass in ptp
                       // as the cast doesn't change the
                       // expression's precedence
   }
