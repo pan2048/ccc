@@ -3,6 +3,7 @@
 #include "tree.h"
 #include "type.h"
 
+
 // Symbol table lists
  struct symTable *Globhead, *Globtail;	  // Global variables and functions
  struct symTable *Loclhead, *Locltail;	  // Local variables
