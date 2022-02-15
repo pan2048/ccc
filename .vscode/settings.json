@@ -15,6 +15,11 @@
         "memory": "c",
         "cerrno": "c",
         "istream": "c",
-        "random": "c"
+        "random": "c",
+        "atomic": "c",
+        "optional": "c",
+        "type_traits": "c",
+        "numeric": "c",
+        "ostream": "c"
     }
 }

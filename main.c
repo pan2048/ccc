@@ -86,6 +86,7 @@ enum
 int main(int argc, char **argv)
 {
   char *outFileName = AOUT;
+  int surfix = 'c';
   char *asmFileName, *objFileName;
   char *objFileNames[MAXOBJ];
   int i, j, objCount = 0;
@@ -145,8 +146,15 @@ int main(int argc, char **argv)
   // Work on each input file in turn
   while (i < argc)
   {
-    asmFileName = doCompile(argv[i]); // Compile the source file
-
+    surfix = fileNameGetSuffix(argv[i]);
+    if(surfix == 'c') {
+      fprintf(stderr, "c file %s", argv[i]);
+      asmFileName = doCompile(argv[i]); // Compile the source file
+    } else {
+      fprintf(stderr, "s file %s", argv[i]);
+      asmFileName = argv[i];
+    }
+  
     if (O_dolink || O_assemble)
     {
       objFileName = doAssemble(asmFileName, O_verbose); // Assemble it to object forma
@@ -159,7 +167,7 @@ int main(int argc, char **argv)
       objFileNames[objCount] = NULL;          // to the list of object files
     }
 
-    if (!O_keepasm)            // Remove the assembly file if
+    if (surfix == 'c' && !O_keepasm)            // Remove the assembly file if
       fileUnlink(asmFileName); // we don't need to keep it
     i++;
   }

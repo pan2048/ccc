@@ -38,8 +38,13 @@ static int functionParamDeclarationList(struct symTable *oldfuncsym)
 
         // Get the type of the next parameter
         type = declarationList(&ctype, C_PARAM, T_COMMA, T_RPAREN, &unused);
-        if (type == -1)
-            fatal("Bad type in parameter list");
+        if (type == -1) 
+            if (Token.token == T_DOTDOTDOT) {
+                scan(&Token);
+                continue;
+            }
+            else    
+                fatal("Bad type in parameter list");
 
         // Ensure the type of this parameter matches the prototype
         if (protoptr != NULL)

@@ -14,12 +14,14 @@ BINDIR=/tmp
 
 HSRCS= main.h incdir.h
 SRCS= main.c $(EXTERNAL_FILES) $(LIB_FILES) $(MODEL_FILES) $(LEXER_FILES) $(PARSER_FILES) $(CODEGEN_X64_FILES) $(TOOL_FILES)
-
-cwj: $(SRCS) $(HSRCS)
-	cc -o bin/cwj -g -Wall $(SRCS)
+OBJS := $(addsuffix .o,$(basename $(SRCS)))
 
 incdir.h:
 	echo "#define INCDIR \"$(INCDIR)\"" > incdir.h
+
+cwj: $(OBJS) $(HSRCS)
+	$(CC) -no-pie $(LDFLAGS) $(OBJS) -o $@ $(LOADLIBES) $(LDLIBS)
+	mv cwj bin
 
 install: cwj
 	mkdir -p $(INCDIR)
@@ -28,7 +30,7 @@ install: cwj
 	chmod +x $(BINDIR)/cwj
 
 clean:
-	rm -f bin/* cwj cwj[0-9] cwjarm *.o */*.o */*/*.o *.s out a.out incdir.h
+	rm -f bin/* cwj cwj[0-9] cwjarm *.o */*.o */*/*.o out a.out 
 
 test: install tests/runtests
 	(cd tests; chmod +x runtests; ./runtests)

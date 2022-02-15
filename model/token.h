@@ -82,7 +82,9 @@ enum
   T_COMMA,
   T_DOT,
   T_ARROW,
-  T_COLON
+  T_COLON,
+
+  T_DOTDOTDOT
 };
 
 // Token structure

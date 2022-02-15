@@ -114,7 +114,19 @@ int scanOperator(struct token *t, int c)
         t->token = T_COMMA;
         break;
     case '.':
-        t->token = T_DOT;
+        if ((c = next()) == '.')
+        {
+            if ((c = next()) == '.') {
+                t->token = T_DOTDOTDOT;
+            } else {
+                fatalc("Unrecognised character", c);
+            }    
+        }
+        else
+        {
+            putback(c);
+            t->token = T_DOT;
+        }    
         break;
     case ':':
         t->token = T_COLON;

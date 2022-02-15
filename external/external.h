@@ -21,4 +21,6 @@ void panicc(char *s, int c, int lineNum, char *fileName);
 void *memAlloc(int size);
 void *memRealloc(char *ptr, int size);
 
+int print(int *varg,...);
+
 #endif

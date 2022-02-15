@@ -56,3 +56,27 @@ char *fileNameAlterSuffix(char *str, char suffix)
   *posn = '\0';
   return (newstr);
 }
+
+char fileNameGetSuffix(char *str)
+{
+  char *posn;
+  char *newstr;
+
+  // Clone the string
+  if ((newstr = strDup(str)) == NULL)
+    return ('0');
+
+  // Find the '.'
+  if ((posn = strRchr(newstr, '.')) == NULL)
+    return ('0');
+
+  // Ensure there is a suffix
+  posn++;
+  if (*posn == '\0')
+    return ('0');
+
+  char ret = *posn;
+  posn++;
+  *posn = '\0';
+  return (ret);
+}

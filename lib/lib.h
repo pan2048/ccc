@@ -19,6 +19,7 @@ void fatald(char *s, int d);
 void fatalc(char *s, int c);
 
 char *fileNameAlterSuffix(char *str, char suffix);
+char fileNameGetSuffix(char *str);
 
 int strLen(char *str);
 char *strDup(char *s);

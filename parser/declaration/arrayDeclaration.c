@@ -11,7 +11,7 @@ struct symTable *arrayDeclaration(char *varname, int type, struct symTable *ctyp
   int maxElems;         // The maximum number of elements in the init list
   struct symTable *sym; // New symbol table entry
   int *initlist;        // The list of initial elements
-  int i = 0, j;
+  int i = 0;
 
   // Skip past the '['
   scan(&Token);
@@ -96,6 +96,7 @@ struct symTable *arrayDeclaration(char *varname, int type, struct symTable *ctyp
 
     // Zero any unused elements in the initlist.
     // Attach the list to the symbol table entry
+    int j;
     for (j = i; j < sym->nelems; j++)
       initlist[j] = 0;
 

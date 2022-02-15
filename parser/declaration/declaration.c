@@ -102,6 +102,9 @@ int parseType(struct symTable **ctype, int *class)
   case T_IDENT:
     type = type_of_typedef(Text, ctype);
     break;
+  case T_DOTDOTDOT:
+    type = -1;
+    break;
   default:
     fatals("Illegal type, token", Token.tokstr);
   }
