@@ -148,10 +148,8 @@ int main(int argc, char **argv)
   {
     surfix = fileNameGetSuffix(argv[i]);
     if(surfix == 'c') {
-      fprintf(stderr, "c file %s", argv[i]);
       asmFileName = doCompile(argv[i]); // Compile the source file
     } else {
-      fprintf(stderr, "s file %s", argv[i]);
       asmFileName = argv[i];
     }
   

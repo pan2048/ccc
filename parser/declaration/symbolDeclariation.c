@@ -6,7 +6,7 @@
 // The class argument is the symbol's class.
 // Return a pointer to the symbol's entry in the symbol table
 struct symTable *symbolDeclaration(int type, struct symTable *ctype,
-                                    int class, struct ASTnode **tree)
+                                   int class, struct ASTnode **tree)
 {
   struct symTable *sym = NULL;
   char *varname = strDup(Text);
