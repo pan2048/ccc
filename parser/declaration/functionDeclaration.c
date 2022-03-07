@@ -83,6 +83,9 @@ struct symTable *functionDeclaration(char *funcname, int type,
     int endlabel, paramcnt;
     int linenum = LineNumber;
 
+    if (class != C_GLOBAL && class != C_STATIC)
+        fatal("Function definition not at global level");
+
     // Text has the identifier's name. If this exists and is a
     // function, get the id. Otherwise, set oldfuncsym to NULL.
     if ((oldfuncsym = findSymbol(funcname)) != NULL)

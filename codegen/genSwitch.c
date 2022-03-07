@@ -5,8 +5,8 @@
 // Generate the code for a SWITCH statement
 int genSwitch(struct ASTnode *n) {
   // Output the code to calculate the switch condition
-  int Ljumptop = getLabel();
   int reg = genAST(n->left, NOLABEL, NOLABEL, NOLABEL, 0);
+  int Ljumptop = getLabel();
   cgJumpTo(Ljumptop);
   cgRegisterFreeAll(reg);
 
