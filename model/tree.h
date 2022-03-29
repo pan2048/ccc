@@ -35,8 +35,6 @@ struct ASTnode {
 
 // union or enum
 enum {
-  NOREG = -1,			// Use NOREG when the AST generation
-  				// functions have no register to return
   NOLABEL = 0			// Use NOLABEL when we have no label to
     				// pass to genAST()
 };

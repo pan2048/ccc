@@ -1,6 +1,6 @@
 #include "x64.h"
 
-// Flag to say which section outputting into
+// Flag of sections outputting into
 enum { no_seg, text_seg, data_seg } currSeg = no_seg;
 
 // Switch to the text segment
@@ -19,9 +19,9 @@ void _cgDirectiveDataSeg() {
   }
 }
 
-// Output a gdb directive to say on which
-// source code line number the following
-// assembly code came from
+// Gdb directive
+// on which source code line number 
+// the following assembly code came from
 void cgDirectiveLineNumber(int line) {
   fprintf(Outfile, "\t.loc 1 %d 0\n", line);
 }

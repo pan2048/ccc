@@ -1,7 +1,6 @@
 #include "x64.h"
 
-// Print out the assembly preamble
-// for one output file
+// The assembly preamble for one output file
 void cgFilePreamble(char *filename) {
   cgRegisterFreeAll(NOREG);
   _cgDirectiveTextSeg();

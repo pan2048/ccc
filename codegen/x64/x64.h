@@ -1,10 +1,15 @@
 #ifndef _X64_H
 #define _X64_H
 
-//#include "../../lib/lib.h"
+#include "../../lib/lib.h"
 #include "../genLib.h"
 #include "../cg.h"
 
+
+enum {
+  NOREG = -1			// Use NOREG when the AST generation
+  				// functions have no register to return
+};
 
 extern char *registerList[];
 extern char *registerByteList[];

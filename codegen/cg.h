@@ -2,6 +2,7 @@
 #define _CG_H_
 
 #include "../parser/parser.h"
+#include "x64/x64.h"
 
 void cgDirectiveLineNumber(int line);
 
@@ -14,7 +15,7 @@ int cgFunctionCall(struct symTable *sym, int numargs);
 void cgFunctionCopyArg(int r, int argposn);
 
 void cgGlobalSym(struct symTable *node);
-void cgGlobalStr(int l, char *strvalue, int append);
+void cgGlobalStr(int lable, char *strvalue, int append);
 void cgGlobalStrEnd(void);
 
 int cgJmpBoolean(int r, int op, int label);

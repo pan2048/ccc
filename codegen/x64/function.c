@@ -22,17 +22,12 @@ int _newLocalOffset(int size)
 // Print out a function preamble
 void cgFunctionPreamble(struct symTable *sym)
 {
-  char *name = sym->name;
-  struct symTable *parm, *locvar;
-  int cnt;
-  int paramOffset = 16;           // Any pushed params start at this stack offset
-  int paramReg = FIRST_PARAM_REG; // Index to the first param register in above reg lists
-
   // Output in the text segment, reset local offset
   _cgDirectiveTextSeg();
   localOffset = 0;
 
-  // Output the function start, save the %rsp and %rsp
+  char *name = sym->name;
+  // Output the function start, save the %rbp and %rsp
   if (sym->class == C_GLOBAL)
     fprintf(Outfile, "\t.globl\t%s\n"
                      "\t.type\t%s, @function\n",
@@ -44,6 +39,10 @@ void cgFunctionPreamble(struct symTable *sym)
 
   // Copy any in-register parameters to the stack, up to six of them
   // The remaining parameters are already on the stack
+  struct symTable *parm;
+  int cnt;
+  int paramOffset = 16;           // Any pushed params start at this stack offset
+  int paramReg = FIRST_PARAM_REG; // Index to the first param register in above reg lists
   for (parm = sym->member, cnt = 1; parm != NULL; parm = parm->next, cnt++)
   {
     if (cnt > 6)
@@ -60,6 +59,7 @@ void cgFunctionPreamble(struct symTable *sym)
 
   // For the remainder, if they are a parameter then they are
   // already on the stack. If only a local, make a stack position.
+  struct symTable *locvar;
   for (locvar = Loclhead; locvar != NULL; locvar = locvar->next)
   {
     locvar->st_posn = _newLocalOffset(locvar->size);
@@ -87,8 +87,6 @@ void cgFunctionPostamble(struct symTable *sym)
 // Return the register with the result
 int cgFunctionCall(struct symTable *sym, int numargs)
 {
-  int outr;
-
   // Call the function
   fprintf(Outfile, "\tcall\t%s@PLT\n", sym->name);
 
@@ -100,6 +98,7 @@ int cgFunctionCall(struct symTable *sym, int numargs)
   cgRegisterUnSpill();
 
   // Get a new register and copy the return value into it
+  int outr;
   outr = cgRegisterAlloc();
   fprintf(Outfile, "\tmovq\t%%rax, %s\n", registerList[outr]);
   return (outr);

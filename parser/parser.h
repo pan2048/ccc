@@ -22,6 +22,8 @@ struct ASTnode *postfixExpression(int ptp);
 
 
 int parseType(struct symTable **ctype, int *class);
+int typedef_declaration(struct symTable **ctype);
+int type_of_typedef(char *name, struct symTable **ctype);
 int parseStars(int type);
 int parseCast(struct symTable **ctype);
 int declarationList(struct symTable **ctype, int class, int et1, int et2,

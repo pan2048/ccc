@@ -5,31 +5,13 @@ struct symTable *Functionid; // Symbol ptr of the current function
 int Looplevel;   // Depth of nested loops
 int Switchlevel; // Depth of nested switches
 
-//struct symtable *composite_declaration(int type);
-int typedef_declaration(struct symTable **ctype);
-
-// Given a typedef name, return the type it represents
-int type_of_typedef(char *name, struct symTable **ctype)
-{
-  struct symTable *t;
-
-  // Look up the typedef in the list
-  t = findtypedef(name);
-  if (t == NULL)
-    fatals("unknown type", name);
-  scan(&Token);
-  *ctype = t->ctype;
-  return (t->type);
-}
-
 // Parse the current token and return a primitive type enum value,
 // a pointer to any composite type and possibly modify
 // the class of the type.
 int parseType(struct symTable **ctype, int *class)
 {
-  int type, externStatic = 1;
-
   // See if the class has been changed to extern or static
+  int externStatic = 1;
   while (externStatic)
   {
     switch (Token.token)
@@ -54,6 +36,7 @@ int parseType(struct symTable **ctype, int *class)
   }
 
   // Now work on the actual type keyword
+  int type = 1;
   switch (Token.token)
   {
   case T_VOID:
@@ -111,6 +94,47 @@ int parseType(struct symTable **ctype, int *class)
   return (type);
 }
 
+// Parse a typedef declaration and return the type
+// and ctype that it represents
+int typedef_declaration(struct symTable **ctype)
+{
+  int type, class = 0;
+
+  // Skip the typedef keyword.
+  scan(&Token);
+
+  // Get the actual type following the keyword
+  type = parseType(ctype, &class);
+  if (class != 0)
+    fatal("Can't have static/extern in a typedef declaration");
+
+  // See if the typedef identifier already exists
+  if (findtypedef(Text) != NULL)
+    fatals("redefinition of typedef", Text);
+
+  // Get any following '*' tokens
+  type = parseStars(type);
+
+  // It doesn't exist so add it to the typedef list
+  addtypedef(Text, type, *ctype);
+  scan(&Token);
+  return (type);
+}
+
+// Given a typedef name, return the type it represents
+int type_of_typedef(char *name, struct symTable **ctype)
+{
+  struct symTable *t;
+
+  // Look up the typedef in the list
+  t = findtypedef(name);
+  if (t == NULL)
+    fatals("unknown type", name);
+  scan(&Token);
+  *ctype = t->ctype;
+  return (t->type);
+}
+
 // Given a type parsed by parse_type(), scan in any following
 // '*' tokens and return the new type
 int parseStars(int type)
@@ -136,33 +160,5 @@ int parseCast(struct symTable **ctype)
   // Do some error checking. I'm sure more can be done
   if (type == P_STRUCT || type == P_UNION || type == P_VOID)
     fatal("Cannot cast to a struct, union or void type");
-  return (type);
-}
-
-
-// Parse a typedef declaration and return the type
-// and ctype that it represents
-int typedef_declaration(struct symTable **ctype)
-{
-  int type, class = 0;
-
-  // Skip the typedef keyword.
-  scan(&Token);
-
-  // Get the actual type following the keyword
-  type = parseType(ctype, &class);
-  if (class != 0)
-    fatal("Can't have static/extern in a typedef declaration");
-
-  // See if the typedef identifier already exists
-  if (findtypedef(Text) != NULL)
-    fatals("redefinition of typedef", Text);
-
-  // Get any following '*' tokens
-  type = parseStars(type);
-
-  // It doesn't exist so add it to the typedef list
-  addtypedef(Text, type, *ctype);
-  scan(&Token);
   return (type);
 }

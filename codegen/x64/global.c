@@ -3,10 +3,6 @@
 // Generate a global symbol but not functions
 void cgGlobalSym(struct symTable *node)
 {
-  int size, type;
-  int initvalue;
-  int i;
-
   if (node == NULL)
     return;
   if (node->stype == S_FUNCTION)
@@ -14,15 +10,16 @@ void cgGlobalSym(struct symTable *node)
 
   // Get the size of the variable (or its elements if an array)
   // and the type of the variable
+  int type, size;
   if (node->stype == S_ARRAY)
   {
-    size = typeSize(typeValueAt(node->type), node->ctype);
     type = typeValueAt(node->type);
+    size = typeSize(type, node->ctype);
   }
   else
   {
-    size = node->size;
     type = node->type;
+    size = node->size;
   }
 
   // Generate the global identity and the label
@@ -32,10 +29,12 @@ void cgGlobalSym(struct symTable *node)
   fprintf(Outfile, "%s:\n", node->name);
 
   // Output space for one or more elements
+  int i;
   for (i = 0; i < node->nelems; i++)
   {
 
     // Get any initial value
+    int initvalue;
     initvalue = 0;
     if (node->initlist != NULL)
       initvalue = node->initlist[i];
@@ -66,11 +65,11 @@ void cgGlobalSym(struct symTable *node)
 
 // Generate a global string and its start label.
 // Don't output the label if append is true.
-void cgGlobalStr(int l, char *strvalue, int append)
+void cgGlobalStr(int lable, char *strvalue, int append)
 {
   char *cptr;
   if (!append)
-    cgOutputLabel(l);
+    cgOutputLabel(lable);
   for (cptr = strvalue; *cptr; cptr++)
   {
     fprintf(Outfile, "\t.byte\t%d\n", *cptr);
