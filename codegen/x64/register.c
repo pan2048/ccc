@@ -6,7 +6,7 @@
 // hold function parameters
 
 #define NUM_FREE_REGS 4
-int freeRegister[NUM_FREE_REGS];
+int freeRegisters[NUM_FREE_REGS];
 char *registerList[] =
     {"%r10", "%r11", "%r12", "%r13", "%r9", "%r8", "%rcx", "%rdx", "%rsi", "%rdi"};
 
@@ -30,12 +30,12 @@ void _cgRegisterPop(int r)
 
 // Set all registers as available.
 // But if reg is positive, don't free that one.
-void cgRegisterFreeAll(int keepreg)
+void cgRegisterFreeAll(int regtokeep)
 {
   int i;
   for (i = 0; i < NUM_FREE_REGS; i++)
-    if (i != keepreg)
-      freeRegister[i] = 1;
+    if (i != regtokeep)
+      freeRegisters[i] = 1;
 }
 
 // When we need to spill a register, we choose
@@ -53,9 +53,9 @@ int cgRegisterAlloc()
 
   for (reg = 0; reg < NUM_FREE_REGS; reg++)
   {
-    if (freeRegister[reg])
+    if (freeRegisters[reg])
     {
-      freeRegister[reg] = 0;
+      freeRegisters[reg] = 0;
       return (reg);
     }
   }
@@ -71,7 +71,7 @@ int cgRegisterAlloc()
 // Check to see if it's not already there.
 void cgRegisterFree(int reg)
 {
-  if (freeRegister[reg] != 0)
+  if (freeRegisters[reg] != 0)
   {
     fatald("Error trying to free register", reg);
   }
@@ -79,12 +79,14 @@ void cgRegisterFree(int reg)
   if (spillRegister > 0)
   {
     spillRegister--;
-    reg = (spillRegister % NUM_FREE_REGS);
-    _cgRegisterPop(reg);
+    int spillReg = (spillRegister % NUM_FREE_REGS);
+    _cgRegisterPop(spillReg);
+    if(reg != spillReg)
+      fatald("Error trying to free register but freed a spilled one", reg);    
   }
   else
   {
-    freeRegister[reg] = 1;
+    freeRegisters[reg] = 1;
   }
 }
 

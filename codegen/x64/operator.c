@@ -1,16 +1,14 @@
 #include "x64.h"
 
-// Add two registers together and return
-// the number of the register with the result
-int cgOpAdd(int r1, int r2)
+// Add two registers
+int cgOpAdd(int r1, int r2) 
 {
   fprintf(Outfile, "\taddq\t%s, %s\n", registerList[r2], registerList[r1]);
   cgRegisterFree(r2);
   return (r1);
 }
 
-// Subtract the second register from the first and
-// return the number of the register with the result
+// Subtract the second register from the first
 int cgOpSub(int r1, int r2)
 {
   fprintf(Outfile, "\tsubq\t%s, %s\n", registerList[r2], registerList[r1]);
@@ -18,8 +16,7 @@ int cgOpSub(int r1, int r2)
   return (r1);
 }
 
-// Multiply two registers together and return
-// the number of the register with the result
+// Multiply two registers
 int cgOpMul(int r1, int r2)
 {
   fprintf(Outfile, "\timulq\t%s, %s\n", registerList[r2], registerList[r1]);
@@ -27,8 +24,7 @@ int cgOpMul(int r1, int r2)
   return (r1);
 }
 
-// Divide or modulo the first register by the second and
-// return the number of the register with the result
+// Divide or modulo the first register by the second
 int cgOpDivMod(int r1, int r2, int op)
 {
   fprintf(Outfile, "\tmovq\t%s,%%rax\n", registerList[r1]);

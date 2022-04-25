@@ -1,8 +1,8 @@
 #include "x64.h"
 
-// Load an integer literal value into a register.
+// Load an integer literal into a register.
 // Return the number of the register.
-// For x86-64, we don't need to worry about the type.
+// For x86-64, type is not used.
 int cgLoadLiteralInt(int value, int type)
 {
   // Get a new register
@@ -18,20 +18,19 @@ int cgLoadLiteralInt(int value, int type)
 // also perform this action.
 int cgLoadVariable(struct symTable *sym, int op)
 {
-  int r, postreg, offset = 1;
-
-  // Get a new register
-  r = cgRegisterAlloc();
-
   // If the symbol is a pointer, use the size
   // of the type that it points to as any
   // increment or decrement. If not, it's one.
+  int offset = 1;
   if (typeIsPointer(sym->type))
     offset = typeSize(typeValueAt(sym->type), sym->ctype);
 
   // Negate the offset for decrements
   if (op == A_PREDEC || op == A_POSTDEC)
     offset = -offset;
+
+  // Get a new register
+  int r = cgRegisterAlloc();
 
   // If we have a pre-operation
   if (op == A_PREINC || op == A_PREDEC)
@@ -90,7 +89,7 @@ int cgLoadVariable(struct symTable *sym, int op)
   // If we have a post-operation, get a new register
   if (op == A_POSTINC || op == A_POSTDEC)
   {
-    postreg = cgRegisterAlloc();
+    int postreg = cgRegisterAlloc();
 
     // Load the symbol's address
     if (sym->class == C_LOCAL || sym->class == C_PARAM)
@@ -139,8 +138,7 @@ void cgLoadBoolean(int r, int val)
   fprintf(Outfile, "\tmovq\t$%d, %s\n", val, registerList[r]);
 }
 
-// Generate code to load the address of an
-// identifier into a variable. Return a new register
+// Load the address of an identifier into a variable. Return a new register
 int cgLoadAddress(struct symTable *sym)
 {
   int r = cgRegisterAlloc();

@@ -1,7 +1,6 @@
 #include "x64.h"
 
 // Dereference a pointer to get the value
-// it points at into the same register
 int cgPointerDeref(int r, int type) {
   // Get the type that we are pointing to
   int newtype = typeValueAt(type);
@@ -25,7 +24,7 @@ int cgPointerDeref(int r, int type) {
 }
 
 // Store through a dereferenced pointer
-int cgPointerStorDeref(int r1, int r2, int type) {
+int cgPointerStoreDeref(int r1, int r2, int type) {
   // Get the size of the type
   int size = cgTypeSize(type);
 
@@ -40,7 +39,7 @@ int cgPointerStorDeref(int r1, int r2, int type) {
     fprintf(Outfile, "\tmovq\t%s, (%s)\n", registerList[r1], registerList[r2]);
     break;
   default:
-    fatald("Can't cgPointerStorDeref on type:", type);
+    fatald("Can't cgPointerStoreDeref on type:", type);
   }
   return (r1);
 }

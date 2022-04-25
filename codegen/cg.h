@@ -47,10 +47,10 @@ int cgOpShr(int r1, int r2);
 int cgOpShlConst(int r, int val);
 
 int cgPointerDeref(int r, int type);
-int cgPointerStorDeref(int r1, int r2, int type);
+int cgPointerStoreDeref(int r1, int r2, int type);
 
 int cgRegisterAlloc(void);
-void cgRegisterFreeAll(int keepreg);
+void cgRegisterFreeAll(int regtokeep);
 void cgRegisterFree(int reg);
 void cgRegisterSpill();
 void cgRegisterUnSpill();

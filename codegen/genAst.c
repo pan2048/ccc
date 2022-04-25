@@ -156,7 +156,7 @@ int genAST(struct ASTnode *n, int iflabel, int looptoplabel,
             else
                 return (cgStoreLocal(leftReg, n->right->sym));
         case A_DEREF:
-            return (cgPointerStorDeref(leftReg, rightReg, n->right->type));
+            return (cgPointerStoreDeref(leftReg, rightReg, n->right->type));
         default:
             fatald("Can't A_ASSIGN in genAST(), op", n->op);
         }
