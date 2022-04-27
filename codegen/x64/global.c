@@ -32,10 +32,8 @@ void cgGlobalSym(struct symTable *node)
   int i;
   for (i = 0; i < node->nelems; i++)
   {
-
     // Get any initial value
-    int initvalue;
-    initvalue = 0;
+    int initvalue = 0;
     if (node->initlist != NULL)
       initvalue = node->initlist[i];
 
@@ -67,9 +65,9 @@ void cgGlobalSym(struct symTable *node)
 // Don't output the label if append is true.
 void cgGlobalStr(int lable, char *strvalue, int append)
 {
-  char *cptr;
   if (!append)
     cgOutputLabel(lable);
+  char *cptr;
   for (cptr = strvalue; *cptr; cptr++)
   {
     fprintf(Outfile, "\t.byte\t%d\n", *cptr);

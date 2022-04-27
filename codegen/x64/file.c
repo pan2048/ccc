@@ -4,11 +4,7 @@
 void cgFilePreamble(char *filename) {
   cgRegisterFreeAll(NOREG);
   _cgDirectiveTextSeg();
-  fprintf(Outfile, "\t.file 1 ");
-  fputc('"', Outfile);
-  fprintf(Outfile, "%s", filename);
-  fputc('"', Outfile);
-  fputc('\n', Outfile);
+  fprintf(Outfile, "\t.file 1 %c%s%c\n", '"',   filename, '"');
   _cgSwitchRoutine();
 }
 
